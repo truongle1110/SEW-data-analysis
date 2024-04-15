@@ -67,21 +67,21 @@ data_failure_time_distribution_LIGNE_DE_MONTAGE_MOTG02 = df.loc[rows_LIGNE_DE_MO
 
 
 
-# Creating the one-dimensional strip plot
-x_label = [data_failure_time_distribution_POSTE_DE_CONTROLE, data_failure_time_distribution_CONNECTEURS, data_failure_time_distribution_POSTE_09, data_failure_time_distribution_POSTE_04, data_failure_time_distribution_CONVOYEURS, data_failure_time_distribution_LIGNE_DE_MONTAGE_MOTG02]
-y_label = ['POSTE DE CONTRÔLE', 'CONNECTEURS', 'POSTE 09 : MONTAGE CÔTÉ A (RETOURNEMENTS)', 'POSTE 04  : EMMANCHEMENTS ROULEMENTS (PRESSE)', 'CONVOYEURS', 'LIGNE DE MONTAGE MOTG02']
-length_y = [len(data_failure_time_distribution_POSTE_DE_CONTROLE), len(data_failure_time_distribution_CONNECTEURS), len(data_failure_time_distribution_POSTE_09), len(data_failure_time_distribution_POSTE_04), len(data_failure_time_distribution_CONVOYEURS), len(data_failure_time_distribution_LIGNE_DE_MONTAGE_MOTG02)]
-data = {
-	'x_label': np.concatenate(x_label),
-	'y_label': np.repeat(y_label, length_y)
-}
-plt.figure(figsize=(20, 6))
-sns.stripplot(x='x_label', y='y_label', data=data, jitter=False, color='red', size=4)
-plt.title('Distribution of Failure on Each Component')
-plt.xlabel('Time')
-plt.ylabel('Component')
-plt.xlim(-10, 6000)
-# plt.show()
+# # Creating the one-dimensional strip plot
+# x_label = [data_failure_time_distribution_POSTE_DE_CONTROLE, data_failure_time_distribution_CONNECTEURS, data_failure_time_distribution_POSTE_09, data_failure_time_distribution_POSTE_04, data_failure_time_distribution_CONVOYEURS, data_failure_time_distribution_LIGNE_DE_MONTAGE_MOTG02]
+# y_label = ['POSTE DE CONTRÔLE', 'CONNECTEURS', 'POSTE 09 : MONTAGE CÔTÉ A (RETOURNEMENTS)', 'POSTE 04  : EMMANCHEMENTS ROULEMENTS (PRESSE)', 'CONVOYEURS', 'LIGNE DE MONTAGE MOTG02']
+# length_y = [len(data_failure_time_distribution_POSTE_DE_CONTROLE), len(data_failure_time_distribution_CONNECTEURS), len(data_failure_time_distribution_POSTE_09), len(data_failure_time_distribution_POSTE_04), len(data_failure_time_distribution_CONVOYEURS), len(data_failure_time_distribution_LIGNE_DE_MONTAGE_MOTG02)]
+# data = {
+# 	'x_label': np.concatenate(x_label),
+# 	'y_label': np.repeat(y_label, length_y)
+# }
+# plt.figure(figsize=(20, 6))
+# sns.stripplot(x='x_label', y='y_label', data=data, jitter=False, color='red', size=4)
+# plt.title('Distribution of Failure on Each Component')
+# plt.xlabel('Time')
+# plt.ylabel('Component')
+# plt.xlim(-10, 6000)
+# # plt.show()
 
 
 
@@ -117,5 +117,11 @@ ax.set_ylim(0, 70)
 ax.set_xlabel('Time')
 ax.set_ylabel('Component')
 ax.set_yticks([65, 55, 45, 35, 25, 15], labels=['POSTE DE CONTRÔLE', 'CONNECTEURS', 'POSTE 09 : MONTAGE CÔTÉ A (RETOURNEMENTS)', 'POSTE 04  : EMMANCHEMENTS ROULEMENTS (PRESSE)', 'CONVOYEURS', 'LIGNE DE MONTAGE MOTG02'])     # Modify y-axis tick labels
+plt.scatter(data_failure_time_distribution_POSTE_DE_CONTROLE, 65*np.ones(len(data_failure_time_distribution_POSTE_DE_CONTROLE)), color='blue', marker = 'x', s = 15)
+plt.scatter(data_failure_time_distribution_CONNECTEURS, 55*np.ones(len(data_failure_time_distribution_CONNECTEURS)), color='green', marker = 'x', s = 15)
+plt.scatter(data_failure_time_distribution_POSTE_09, 45*np.ones(len(data_failure_time_distribution_POSTE_09)), color='orange', marker = 'x', s = 15)
+plt.scatter(data_failure_time_distribution_POSTE_04, 35*np.ones(len(data_failure_time_distribution_POSTE_04)), color='red', marker = 'x', s = 15)
+plt.scatter(data_failure_time_distribution_CONVOYEURS, 25*np.ones(len(data_failure_time_distribution_CONVOYEURS)), color='black', marker = 'x', s = 15)
+plt.scatter(data_failure_time_distribution_LIGNE_DE_MONTAGE_MOTG02, 15*np.ones(len(data_failure_time_distribution_LIGNE_DE_MONTAGE_MOTG02)), color='pink', marker = 'x', s = 15)
 ax.grid(True)                                       # Make grid lines visible
 plt.show()
