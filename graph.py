@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 import numpy as np
 import seaborn as sns
 import plotly.express as px
@@ -130,7 +131,8 @@ ax.set_ylim(7, 72)
 ax.set_xlabel('Time')
 ax.set_ylabel('Component')
 ax.set_yticks([65, 55, 45, 35, 25, 15], labels=['POSTE DE CONTRÔLE', 'CONNECTEURS', 'POSTE 09 : MONTAGE CÔTÉ A (RETOURNEMENTS)', 'POSTE 04  : EMMANCHEMENTS ROULEMENTS (PRESSE)', 'CONVOYEURS', 'LIGNE DE MONTAGE MOTG02'])     # Modify y-axis tick labels
-plt.scatter(data_failure_time_distribution_POSTE_DE_CONTROLE, 65*np.ones(len(data_failure_time_distribution_POSTE_DE_CONTROLE)), color='blue', marker = 'x', s = 15)
+
+plt.scatter(data_failure_time_distribution_POSTE_DE_CONTROLE, 65*np.ones(len(data_failure_time_distribution_POSTE_DE_CONTROLE)), color='blue', marker = 'x', s = 15, label = 'Failure time')
 plt.scatter(data_failure_time_distribution_CONNECTEURS, 55*np.ones(len(data_failure_time_distribution_CONNECTEURS)), color='green', marker = 'x', s = 15)
 plt.scatter(data_failure_time_distribution_POSTE_09, 45*np.ones(len(data_failure_time_distribution_POSTE_09)), color='orange', marker = 'x', s = 15)
 plt.scatter(data_failure_time_distribution_POSTE_04, 35*np.ones(len(data_failure_time_distribution_POSTE_04)), color='red', marker = 'x', s = 15)
@@ -148,3 +150,4 @@ plt.title('Distribution of Failure on Each Component and estimated repair time')
 ax.grid(True, linestyle=':')                                       # Make grid lines visible
 plt.legend(loc='upper right')
 plt.show()
+
