@@ -127,7 +127,7 @@ ax.broken_barh(data_POSTE_04, (33, 4), facecolors='red')
 ax.broken_barh(data_CONVOYEURS, (23, 4), facecolors='black')
 ax.broken_barh(data_LIGNE_DE_MONTAGE_MOTG02, (13, 4), facecolors='purple')
 ax.set_xlim(-100, 5500)
-ax.set_ylim(7, 72)
+ax.set_ylim(7, 75)
 ax.set_xlabel('Time')
 ax.set_ylabel('Component')
 ax.set_yticks([65, 55, 45, 35, 25, 15], labels=['POSTE DE CONTRÔLE', 'CONNECTEURS', 'POSTE 09 : MONTAGE CÔTÉ A (RETOURNEMENTS)', 'POSTE 04  : EMMANCHEMENTS ROULEMENTS (PRESSE)', 'CONVOYEURS', 'LIGNE DE MONTAGE MOTG02'])     # Modify y-axis tick labels
