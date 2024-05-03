@@ -146,7 +146,7 @@ plt.scatter(int(MTBF_POSTE_04)*np.array([i for i in range(1, int(5500/MTBF_POSTE
 plt.scatter(int(MTBF_CONVOYEURS)*np.array([i for i in range(1, int(5500/MTBF_CONVOYEURS) + 1)]), 24*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_CONVOYEURS) + 1)]))), color='brown', marker = 'o', s = 10)
 plt.scatter(int(MTBF_LIGNE_DE_MONTAGE_MOTG02)*np.array([i for i in range(1, int(5500/MTBF_LIGNE_DE_MONTAGE_MOTG02) + 1)]), 14*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_LIGNE_DE_MONTAGE_MOTG02) + 1)]))), color='brown', marker = 'o', s = 10)
 
-plt.title('Distribution of Failure on Each Component and estimated repair time')
+plt.title('Distribution of failure on each component and estimated repair time')
 ax.grid(True, linestyle=':')                                       # Make grid lines visible
 plt.legend(loc='upper right')
 plt.show()
