@@ -139,12 +139,12 @@ plt.scatter(data_failure_time_distribution_POSTE_04, 35*np.ones(len(data_failure
 plt.scatter(data_failure_time_distribution_CONVOYEURS, 25*np.ones(len(data_failure_time_distribution_CONVOYEURS)), color='black', marker = 'x', s = 15)
 plt.scatter(data_failure_time_distribution_LIGNE_DE_MONTAGE_MOTG02, 15*np.ones(len(data_failure_time_distribution_LIGNE_DE_MONTAGE_MOTG02)), color='purple', marker = 'x', s = 15)
 
-plt.scatter(int(MTBF_POSTE_DE_CONTROLE)*np.array([i for i in range(1, int(5500/MTBF_POSTE_DE_CONTROLE) + 1)]), 64*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_POSTE_DE_CONTROLE) + 1)]))), color='brown', marker = 'o', s = 10, label = 'Estimated repair time')
-plt.scatter(int(MTBF_CONNECTEURS)*np.array([i for i in range(1, int(5500/MTBF_CONNECTEURS) + 1)]), 54*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_CONNECTEURS) + 1)]))), color='brown', marker = 'o', s = 10)
-plt.scatter(int(MTBF_POSTE_09)*np.array([i for i in range(1, int(5500/MTBF_POSTE_09) + 1)]), 44*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_POSTE_09) + 1)]))), color='brown', marker = 'o', s = 10)
-plt.scatter(int(MTBF_POSTE_04)*np.array([i for i in range(1, int(5500/MTBF_POSTE_04) + 1)]), 34*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_POSTE_04) + 1)]))), color='brown', marker = 'o', s = 10)
-plt.scatter(int(MTBF_CONVOYEURS)*np.array([i for i in range(1, int(5500/MTBF_CONVOYEURS) + 1)]), 24*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_CONVOYEURS) + 1)]))), color='brown', marker = 'o', s = 10)
-plt.scatter(int(MTBF_LIGNE_DE_MONTAGE_MOTG02)*np.array([i for i in range(1, int(5500/MTBF_LIGNE_DE_MONTAGE_MOTG02) + 1)]), 14*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_LIGNE_DE_MONTAGE_MOTG02) + 1)]))), color='brown', marker = 'o', s = 10)
+plt.scatter(int(MTBF_POSTE_DE_CONTROLE.iloc[0])*np.array([i for i in range(1, int(5500/MTBF_POSTE_DE_CONTROLE.iloc[0]) + 1)]), 64*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_POSTE_DE_CONTROLE.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10, label = 'Estimated repair time')
+plt.scatter(int(MTBF_CONNECTEURS.iloc[0])*np.array([i for i in range(1, int(5500/MTBF_CONNECTEURS.iloc[0]) + 1)]), 54*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_CONNECTEURS.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+plt.scatter(int(MTBF_POSTE_09.iloc[0])*np.array([i for i in range(1, int(5500/MTBF_POSTE_09.iloc[0]) + 1)]), 44*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_POSTE_09.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+plt.scatter(int(MTBF_POSTE_04.iloc[0])*np.array([i for i in range(1, int(5500/MTBF_POSTE_04.iloc[0]) + 1)]), 34*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_POSTE_04.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+plt.scatter(int(MTBF_CONVOYEURS.iloc[0])*np.array([i for i in range(1, int(5500/MTBF_CONVOYEURS.iloc[0]) + 1)]), 24*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_CONVOYEURS.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+plt.scatter(int(MTBF_LIGNE_DE_MONTAGE_MOTG02.iloc[0])*np.array([i for i in range(1, int(5500/MTBF_LIGNE_DE_MONTAGE_MOTG02.iloc[0]) + 1)]), 14*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_LIGNE_DE_MONTAGE_MOTG02.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
 
 plt.title('Distribution of failure on each component and estimated repair time')
 ax.grid(True, linestyle=':')                                       # Make grid lines visible
