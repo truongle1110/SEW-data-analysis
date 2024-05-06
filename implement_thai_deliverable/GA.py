@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
     d_i -- maintenance duration of component i
     t_i -- execution time of component i
     N_RM -- number of repairmem
-    G_k -- group
+    G -- group
     B_S -- setup cost saving
     B_U -- unavailability cost saving
     P -- penalty cost
@@ -37,7 +37,7 @@ beta = df1['Beta']
 t = df2['Replacement time']
 ID_activity = df2['ID activity']
 ID_component = df2['ID component']
-activity = zip(t, ID_component, ID_activity)    # tuple (t, ID_component, ID_activity)   
+map_activity = zip(ID_component, ID_activity)    # tuple (t, ID_component, ID_activity)   
 
 
 def calculate_cost_saving():                    # fitness function
@@ -60,6 +60,9 @@ POPULATION_SIZE = 100
 MUTATION_RATE = 0.01
 CROSSOVER_RATE = 0.7
 GENERATIONS = 2000
+
+C_s = 500
+C_d = 100
 
 # initialize genome
 def random_genome(length):
@@ -104,14 +107,37 @@ def decode(genome):
     #     print(f"Group {group}: Activities {activities}")
 
     number_of_groups = len(group_activities)
-    G_k = group_activities
-    return number_of_groups, G_k
+    G = sorted(group_activities.items())
+    return number_of_groups, G
 
+# setup cost saving
+def saveup_cost_saving(G, C_s):
+    B_S = []
+    for group, activity in G:
+        buffer = (len(activity) - 1) * C_s
+        B_S.append(buffer)
+    return B_S                                  # shape(B_S) = number of group
+
+# unavailability cost saving
+# def unavailability_cost_saving(G_k, C_d):
+#     B_U = []
+    
+# get maintenance duration for each activity in a group
+# def get_d_group():
 
 # # Test main
-# genome = random_genome(GENOME_LENGTH)
-# N, G = decode(genome)
-# print(genome)
-# print(N)
-# print(G)
- 
+genome = random_genome(GENOME_LENGTH)
+N, G = decode(genome)
+print(genome)
+print(N)
+print(G)
+# print(d)
+for group, activities in G:
+    print(f"Group {group}: Activities {activities}")
+    for activity in activities:
+        print(f"Activity: {activity}")
+        #     if activity == ID_activity:
+        #         duration = df1.loc[df1['ID'] == ID_component, 'Maintenance duration'].iloc[0]
+        #         print(duration)
+# value = df1.loc[df1['ID'] == 4, 'Maintenance duration'].iloc[0]
+# print(list(map_activity))
