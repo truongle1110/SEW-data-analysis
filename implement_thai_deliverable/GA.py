@@ -130,6 +130,7 @@ print(f"Component ID and Activity ID: {map_activity_to_IDcomponent}")
 G_component = mapping_activity_to_componentID(map_activity_to_IDcomponent, G_activity)
 print(f"Components in group: {G_component}")
 
+group_of duration = []
 for group, id_component in G_component:
     print(f"Group: {group}, ID: {id_component}")
     for i in id_component:
