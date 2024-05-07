@@ -37,23 +37,7 @@ beta = df1['Beta']
 t = df2['Replacement time']
 ID_activity = df2['ID activity']
 ID_component = df2['ID component']
-map_activity = zip(ID_component, ID_activity)    # tuple (t, ID_component, ID_activity)   
-
-
-def calculate_cost_saving():                    # fitness function
-    EB = B_S + B_U - P                          # array/list depend on G_k
-    return P 
-
-def multifit_algorithm():
-    """
-    """
-    return 0
-
-def genetic_algorithm():
-    """
-    """
-    return 0
-
+map_activity_to_IDcomponent = list(zip(ID_activity, ID_component))    # list of tuple (ID_component, ID_activity)   
 
 GENOME_LENGTH = 21                              # number of possible group
 POPULATION_SIZE = 100
@@ -95,20 +79,14 @@ def decode(genome):
         else:
             group_activities[new_group] = [activity]
 
-    # # Output the number of groups
-    # print("Number of groups:", len(group_activities))
-
-    # # Output the activities in each new group
-    # """
     # items(): method to return the dictionary's key-value pairs
     # sorted: displaying the Keys in Sorted Order
-    # """
     # for group, activities in sorted(group_activities.items()):
     #     print(f"Group {group}: Activities {activities}")
 
     number_of_groups = len(group_activities)
-    G = sorted(group_activities.items())
-    return number_of_groups, G
+    G_activity = sorted(group_activities.items())                   # group and its activity
+    return number_of_groups, G_activity
 
 # setup cost saving
 def saveup_cost_saving(G, C_s):
@@ -117,6 +95,24 @@ def saveup_cost_saving(G, C_s):
         buffer = (len(activity) - 1) * C_s
         B_S.append(buffer)
     return B_S                                  # shape(B_S) = number of group
+
+# mapping group of activity to group of component using list of tuple map_activity_to_IDcomponent defined above
+def mapping_activity_to_componentID(map_activity_to_IDcomponent, G_activity):
+    # Create a dictionary to map activities to ID components
+    dict = {activity: id_component for activity, id_component in map_activity_to_IDcomponent}
+
+    # Initialize the result list
+    group_of_components = []
+
+    # Process each group and its activities
+    for group, activities in G_activity:
+        # Find the ID components for each activity in the current group
+        components = [dict[activity] for activity in activities if activity in dict]
+        
+        # Append the result as a tuple (group, list of components)
+        group_of_components.append((group, components))
+    return group_of_components
+
 
 # unavailability cost saving
 # def unavailability_cost_saving(G_k, C_d):
@@ -127,17 +123,19 @@ def saveup_cost_saving(G, C_s):
 
 # # Test main
 genome = random_genome(GENOME_LENGTH)
-N, G = decode(genome)
-print(genome)
-print(N)
-print(G)
-# print(d)
-for group, activities in G:
-    print(f"Group {group}: Activities {activities}")
-    for activity in activities:
-        print(f"Activity: {activity}")
-        #     if activity == ID_activity:
-        #         duration = df1.loc[df1['ID'] == ID_component, 'Maintenance duration'].iloc[0]
-        #         print(duration)
+N, G_activity = decode(genome)
+print(f"Genome: {genome}")
+print(f"Activities in group: {G_activity}")
+print(f"Component ID and Activity ID: {map_activity_to_IDcomponent}")
+G_component = mapping_activity_to_componentID(map_activity_to_IDcomponent, G_activity)
+print(f"Components in group: {G_component}")
+
+for group, id_component in G_component:
+    print(f"Group: {group}, ID: {id_component}")
+    for i in id_component:
+        print(i)
+        value = df1.loc[df1['ID'] == i, 'Maintenance duration'].iloc[0]
+        print(value)
 # value = df1.loc[df1['ID'] == 4, 'Maintenance duration'].iloc[0]
-# print(list(map_activity))
+# print(value)
+
