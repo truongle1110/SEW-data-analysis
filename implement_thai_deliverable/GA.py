@@ -98,24 +98,33 @@ def saveup_cost_saving(G, C_s):
 
 # mapping group of activity to group of component using list of tuple map_activity_to_IDcomponent defined above
 def mapping_activity_to_componentID(map_activity_to_IDcomponent, G_activity):
-    # Create a dictionary to map activities to ID components
-    dict = {activity: id_component for activity, id_component in map_activity_to_IDcomponent}
+    # Create a dictionary to map each activity to its ID component
+    dict_map = {activity: component for activity, component in map_activity_to_IDcomponent}
 
     # Initialize the result list
-    group_of_components = []
+    group_to_components = []
 
     # Process each group and its activities
     for group, activities in G_activity:
         # Find the ID components for each activity in the current group
-        components = [dict[activity] for activity in activities if activity in dict]
-        
+        components = [dict_map[activity] for activity in activities if activity in dict_map]
         # Append the result as a tuple (group, list of components)
-        group_of_components.append((group, components))
-    return group_of_components
+        group_to_components.append((group, components))
+    return group_to_components
 
+# mapping group of component to group of duratiion using output from mapping_activity_to_componentID()
+def mapping_IDcomponent_to_duration(G_component):
+    group_to_duration = []
+    for group, id_component in G_component:
+        duration = []
+        for d in id_component:
+            value = df1.loc[df1['ID'] == d, 'Maintenance duration'].iloc[0]
+            duration.append(value)
+        group_to_duration.append((group, duration))
+    return group_to_duration
 
 # unavailability cost saving
-# def unavailability_cost_saving(G_k, C_d):
+# def unavailability_cost_saving(G_activity, C_d):
 #     B_U = []
     
 # get maintenance duration for each activity in a group
@@ -126,17 +135,10 @@ genome = random_genome(GENOME_LENGTH)
 N, G_activity = decode(genome)
 print(f"Genome: {genome}")
 print(f"Activities in group: {G_activity}")
-print(f"Component ID and Activity ID: {map_activity_to_IDcomponent}")
 G_component = mapping_activity_to_componentID(map_activity_to_IDcomponent, G_activity)
-print(f"Components in group: {G_component}")
+print(f"Components ID in group: {G_component}")
+G_duration = mapping_IDcomponent_to_duration(G_component)
+print(f"Durations in group: {G_duration}")
 
-group_of duration = []
-for group, id_component in G_component:
-    print(f"Group: {group}, ID: {id_component}")
-    for i in id_component:
-        print(i)
-        value = df1.loc[df1['ID'] == i, 'Maintenance duration'].iloc[0]
-        print(value)
-# value = df1.loc[df1['ID'] == 4, 'Maintenance duration'].iloc[0]
-# print(value)
+
 
