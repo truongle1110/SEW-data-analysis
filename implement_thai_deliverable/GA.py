@@ -89,12 +89,13 @@ def decode(genome):
     return number_of_groups, G_activity
 
 # setup cost saving
-def saveup_cost_saving(G, C_s):
+def saveup_cost_saving(G_activity, C_s):
     B_S = []
-    for group, activity in G:
+    for group, activity in G_activity:
         buffer = (len(activity) - 1) * C_s
         B_S.append(buffer)
-    return B_S                                  # shape(B_S) = number of group
+    B_S = np.array(B_S)                                             # convert to np array for easily computing
+    return B_S                                                      # shape(B_S) = number of group
 
 # mapping group of activity to group of component using list of tuple map_activity_to_IDcomponent defined above
 def mapping_activity_to_componentID(map_activity_to_IDcomponent, G_activity):
@@ -113,19 +114,23 @@ def mapping_activity_to_componentID(map_activity_to_IDcomponent, G_activity):
     return group_to_components
 
 # mapping group of component to group of duratiion using output from mapping_activity_to_componentID()
+# and calculate total duration of each group
 def mapping_IDcomponent_to_duration(G_component):
     group_to_duration = []
+    total_duration = []
     for group, id_component in G_component:
         duration = []
         for d in id_component:
             value = df1.loc[df1['ID'] == d, 'Maintenance duration'].iloc[0]
             duration.append(value)
         group_to_duration.append((group, duration))
-    return group_to_duration
+        total_duration.append(sum(duration))
+    total_duration = np.array(total_duration)                       # convert to np array for easily computing
+    return group_to_duration, total_duration
 
 # unavailability cost saving
 # def unavailability_cost_saving(G_activity, C_d):
-#     B_U = []
+#     _, sum_di = mapping_IDcomponent_to_duration(G_component)
     
 # get maintenance duration for each activity in a group
 # def get_d_group():
@@ -137,8 +142,12 @@ print(f"Genome: {genome}")
 print(f"Activities in group: {G_activity}")
 G_component = mapping_activity_to_componentID(map_activity_to_IDcomponent, G_activity)
 print(f"Components ID in group: {G_component}")
-G_duration = mapping_IDcomponent_to_duration(G_component)
+G_duration, G_total_duration = mapping_IDcomponent_to_duration(G_component)
 print(f"Durations in group: {G_duration}")
-
+print(f"Total durations in group: {G_total_duration}")
+# B_S = saveup_cost_saving(G_activity, C_s)
+# print(B_S)
+_, sum_di = mapping_IDcomponent_to_duration(G_component)
+assert G_total_duration.all() == sum_di.all() 
 
 
