@@ -142,6 +142,7 @@ def mapping_IDcomponent_to_duration(G_component):
         total_duration.append(sum(duration))
     return group_to_duration, total_duration                            # total_duration: sum_di
 
+
 # mapping group of component to group of alpha using output from mapping_activity_to_componentID()
 def mapping_IDcomponent_to_alpha(G_component):
     group_to_alpha = []
@@ -152,6 +153,7 @@ def mapping_IDcomponent_to_alpha(G_component):
             alpha.append(value)
         group_to_alpha.append((group, alpha))
     return group_to_alpha
+
 
 # mapping group of component to group of beta using output from mapping_activity_to_componentID()
 def mapping_IDcomponent_to_beta(G_component):
@@ -213,12 +215,8 @@ def saveup_cost_saving(G_activity, C_s):
 # unavailability cost saving
 def unavailability_cost_saving(G_activity, C_d, m, w_max):
     G_component = mapping_activity_to_componentID(map_activity_to_IDcomponent, G_activity)
-    # print(f"Components ID in group: {G_component}")
     G_duration, G_total_duration = mapping_IDcomponent_to_duration(G_component)
-    # print(f"Durations in group: {G_duration}")
-    # print(f"Total durations in group: {G_total_duration}")
     d_Gk = calculate_d_Gk(G_duration, m, w_max)
-    # print(d_Gk)
     B_U = (np.array(G_total_duration) - np.array(d_Gk)) * C_d
     return B_U
 
@@ -253,15 +251,10 @@ def penalty_cost(G_activity):
         group, alpha_i_list = G_alpha[i]
         _, beta_i_list = G_beta[i]
         _, t_i_list = replacement_time[i]
-        # print(f"Replacement time: {t_i_list}, Alpha: {alpha_i_list}, Beta: {beta_i_list}")
         # Initial guess for t
         initial_guess = [0.0]
         # Perform the minimization
         result = minimize(wrapper_P_Gk, initial_guess, args=(t_i_list, alpha_i_list, beta_i_list))
-        # Print the results
-        # print("Minimum value of the function: ", np.round(result.fun, decimals=3))
-        # print("Value of t at the minimum: ", np.round(result.x, decimals=3))
-        # print("---------------------------------------------------")
         P.append(np.round(result.fun, decimals=3))
         t_group.append(np.round(result.x, decimals=3))
     return P, t_group
@@ -271,39 +264,20 @@ def cost_benefit(B_S, B_U, P):
     EB = np.array(B_S) + np.array(B_U) - np.array(P)
     return EB
 
-# # Test main
+# fitness function
+def fitness_function(genome):
+    N, G_activity = decode(genome)  
+    B_S = saveup_cost_saving(G_activity, C_s)
+    B_U = unavailability_cost_saving(G_activity, C_d, m, w_max)
+    P, _ = penalty_cost(G_activity)
+    EB = cost_benefit(B_S, B_U, P)
+    fitness_value = np.sum(EB)
+    return fitness_value
+
+
+# ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
+# # # ## ## ## ## ## ## ## ## ## ## ## # Test main # ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
 genome = random_genome(GENOME_LENGTH)
-# genome = [20, 6, 13, 16, 12, 9, 11, 18, 14, 3, 21, 12, 9, 10, 21, 11, 18, 8, 17, 1, 15]
-N, G_activity = decode(genome)
-print(f"Genome: {genome}")
-print(f"Activities in each group: {G_activity}")
-B_S = saveup_cost_saving(G_activity, C_s)
-print(f"Setup cost saving in each group: {B_S}")
-B_U = unavailability_cost_saving(G_activity, C_d, m, w_max)
-print(f"Unavailability cost saving in each group: {B_U}")
-
-# G_component = mapping_activity_to_componentID(map_activity_to_IDcomponent, G_activity)
-# print(f"Components in each group: {G_component}")
-
-# G_alpha = mapping_IDcomponent_to_alpha(G_component)
-# print(f"Alpha in each group: {G_alpha}")
-
-# G_beta = mapping_IDcomponent_to_beta(G_component)
-# print(f"Beta in each group: {G_beta}")
-
-# replacement_time = mapping_activity_to_replacement_time(map_activity_to_replacement_time, G_activity)
-# print(f"Replacement time in each group: {replacement_time}")
-
-P, _ = penalty_cost(G_activity)
-print(f"Penalty cost: {P}")
-
-EB = cost_benefit(B_S, B_U, P)
-print(f"Cost benefit EB = B_S + B_U + P: {EB}")
-
-def fitness(EB):
-    return np.sum(EB)
-
-a = fitness(EB)
-print(a)
-
-
+print(genome)
+fitness_value = fitness_function(genome)
+print("Fitness value = ", fitness_value)

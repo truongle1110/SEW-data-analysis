@@ -67,6 +67,6 @@ def genetic_algorithm():
     best_solution = population[best_index]
     print(f'Best Index: {best_index}')
     print(f'Best Solution: {best_solution}')
-    print(f'Best Fitness: {fitness(best_solution)}'
+    print(f'Best Fitness: {fitness(best_solution)}')
 
 genetic_algorithm()
