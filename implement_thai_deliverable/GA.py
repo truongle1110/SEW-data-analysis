@@ -2,6 +2,7 @@ import random
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.optimize import minimize
 
 """
     Nc -- number of component
@@ -37,9 +38,10 @@ beta = df1['Beta']
 t = df2['Replacement time']
 ID_activity = df2['ID activity']
 ID_component = df2['ID component']
-map_activity_to_IDcomponent = list(zip(ID_activity, ID_component))    # list of tuple (ID_component, ID_activity)   
+map_activity_to_IDcomponent = list(zip(ID_activity, ID_component))      # list of tuple (ID_component, ID_activity)   
+map_activity_to_replacement_time = list(zip(ID_activity, t))            # list of tuple (ID_component, ID_activity)
 
-GENOME_LENGTH = 21                              # number of possible group
+GENOME_LENGTH = 21                                                      # number of possible group
 POPULATION_SIZE = 100
 MUTATION_RATE = 0.01
 CROSSOVER_RATE = 0.7
@@ -47,6 +49,9 @@ GENERATIONS = 2000
 
 C_s = 500
 C_d = 100
+
+m = 2                                                                   # Number of repairmen
+w_max = 7                                                               # Maximum number of iterations for binary search
 
 # initialize genome
 def random_genome(length):
@@ -85,17 +90,9 @@ def decode(genome):
     #     print(f"Group {group}: Activities {activities}")
 
     number_of_groups = len(group_activities)
-    G_activity = sorted(group_activities.items())                   # group and its activity
+    G_activity = sorted(group_activities.items())                       # group and its activity
     return number_of_groups, G_activity
 
-# setup cost saving
-def saveup_cost_saving(G_activity, C_s):
-    B_S = []
-    for group, activity in G_activity:
-        buffer = (len(activity) - 1) * C_s
-        B_S.append(buffer)
-    B_S = np.array(B_S)                                             # convert to np array for easily computing
-    return B_S                                                      # shape(B_S) = number of group
 
 # mapping group of activity to group of component using list of tuple map_activity_to_IDcomponent defined above
 def mapping_activity_to_componentID(map_activity_to_IDcomponent, G_activity):
@@ -113,7 +110,25 @@ def mapping_activity_to_componentID(map_activity_to_IDcomponent, G_activity):
         group_to_components.append((group, components))
     return group_to_components
 
-# mapping group of component to group of duratiion using output from mapping_activity_to_componentID()
+
+# mapping group of activity to group of replacement time using list of tuple map_activity_to_replacement_time defined above
+def mapping_activity_to_replacement_time(map_activity_to_replacement_time, G_activity):
+    # Create a dictionary to map each activity to its replacement time t
+    dict_map = {activity: t for activity, t in map_activity_to_replacement_time}
+
+    # Initialize the result list
+    group_to_replacement_time = []
+
+    # Process each group and its activities
+    for group, activities in G_activity:
+        # Find the time list for each activity in the current group
+        time_list = [dict_map[activity] for activity in activities if activity in dict_map]
+        # Append the result as a tuple (group, time list)
+        group_to_replacement_time.append((group, time_list))
+    return group_to_replacement_time
+
+
+# mapping group of component to group of duration using output from mapping_activity_to_componentID()
 # and calculate total duration of each group
 def mapping_IDcomponent_to_duration(G_component):
     group_to_duration = []
@@ -125,29 +140,160 @@ def mapping_IDcomponent_to_duration(G_component):
             duration.append(value)
         group_to_duration.append((group, duration))
         total_duration.append(sum(duration))
-    total_duration = np.array(total_duration)                       # convert to np array for easily computing
-    return group_to_duration, total_duration
+    return group_to_duration, total_duration                            # total_duration: sum_di
+
+# mapping group of component to group of alpha using output from mapping_activity_to_componentID()
+def mapping_IDcomponent_to_alpha(G_component):
+    group_to_alpha = []
+    for group, id_component in G_component:
+        alpha = []
+        for d in id_component:
+            value = df1.loc[df1['ID'] == d, 'Alpha'].iloc[0]
+            alpha.append(value)
+        group_to_alpha.append((group, alpha))
+    return group_to_alpha
+
+# mapping group of component to group of beta using output from mapping_activity_to_componentID()
+def mapping_IDcomponent_to_beta(G_component):
+    group_to_beta = []
+    for group, id_component in G_component:
+        beta = []
+        for d in id_component:
+            value = df1.loc[df1['ID'] == d, 'Beta'].iloc[0]
+            beta.append(value)
+        group_to_beta.append((group, beta))
+    return group_to_beta
+
+
+# First Fit Decreasing (FFD) method
+def first_fit_decreasing(durations, m, D):
+    durations = sorted(durations, reverse=True)
+    repairmen = [0] * m
+    for duration in durations:
+        # Find the first repairman who can take this activity
+        for i in range(m):
+            if repairmen[i] + duration <= D:
+                repairmen[i] += duration
+                break
+        else:
+            return False
+    return repairmen
+
+# Binary search for optimal total maintenance duration
+def multifit(durations, m, w_max):
+    durations = sorted(durations, reverse=True)
+    D_low = max(durations[0], sum(durations) / m)
+    D_up = max(durations[0], 2 * sum(durations) / m)
+    
+    for w in range(w_max):
+        D = (D_up + D_low) / 2
+        repairmen = first_fit_decreasing(durations, m, D)
+        if repairmen:
+            D_up = D
+            min_maintenance_duration = max(repairmen)
+        else:
+            D_low = D
+    return min_maintenance_duration
+
+def calculate_d_Gk(G_duration, m, w_max):
+    d_Gk = []
+    for _, durations in G_duration:
+        optimal_duration = multifit(durations, m, w_max)
+        d_Gk.append(optimal_duration)
+    return d_Gk
+
+# setup cost saving
+def saveup_cost_saving(G_activity, C_s):
+    B_S = []
+    for group, activity in G_activity:
+        buffer = (len(activity) - 1) * C_s
+        B_S.append(buffer)
+    return B_S                                                          # shape(B_S) = number of group
 
 # unavailability cost saving
-# def unavailability_cost_saving(G_activity, C_d):
-#     _, sum_di = mapping_IDcomponent_to_duration(G_component)
-    
-# get maintenance duration for each activity in a group
-# def get_d_group():
+def unavailability_cost_saving(G_activity, C_d, m, w_max):
+    G_component = mapping_activity_to_componentID(map_activity_to_IDcomponent, G_activity)
+    # print(f"Components ID in group: {G_component}")
+    G_duration, G_total_duration = mapping_IDcomponent_to_duration(G_component)
+    # print(f"Durations in group: {G_duration}")
+    # print(f"Total durations in group: {G_total_duration}")
+    d_Gk = calculate_d_Gk(G_duration, m, w_max)
+    # print(d_Gk)
+    B_U = (np.array(G_total_duration) - np.array(d_Gk)) * C_d
+    return B_U
+
+# Define the piecewise function
+def P_i(t, t_i, alpha_i, beta_i):
+    delta_t = t - t_i
+    if delta_t <= 0:
+        return alpha_i * (delta_t)**2
+    else:
+        return beta_i * (delta_t)**2
+
+# Define the sum function P_Gk
+def P_Gk(t, t_i_list, alpha_i_list, beta_i_list):
+    total_sum = 0
+    for t_i, alpha_i, beta_i in zip(t_i_list, alpha_i_list, beta_i_list):
+        total_sum += P_i(t, t_i, alpha_i, beta_i)
+    return total_sum
+
+# Define the wrapper function for minimization
+def wrapper_P_Gk(t, t_i_list, alpha_i_list, beta_i_list):
+    return P_Gk(t[0], t_i_list, alpha_i_list, beta_i_list)
+
+
+def penalty_cost(G_activity):
+    G_component = mapping_activity_to_componentID(map_activity_to_IDcomponent, G_activity)
+    G_alpha = mapping_IDcomponent_to_alpha(G_component)
+    G_beta = mapping_IDcomponent_to_beta(G_component)
+    replacement_time = mapping_activity_to_replacement_time(map_activity_to_replacement_time, G_activity)
+    P = []                                                                  # penalty cost in each group
+    t_group = []                                                            # optimal time to minimize penalty cost in each group
+    for i in range(len(G_alpha)):
+        group, alpha_i_list = G_alpha[i]
+        _, beta_i_list = G_beta[i]
+        _, t_i_list = replacement_time[i]
+        # print(f"Replacement time: {t_i_list}, Alpha: {alpha_i_list}, Beta: {beta_i_list}")
+        # Initial guess for t
+        initial_guess = [0.0]
+        # Perform the minimization
+        result = minimize(wrapper_P_Gk, initial_guess, args=(t_i_list, alpha_i_list, beta_i_list))
+        # Print the results
+        # print("Minimum value of the function: ", np.round(result.fun, decimals=3))
+        # print("Value of t at the minimum: ", np.round(result.x, decimals=3))
+        # print("---------------------------------------------------")
+        P.append(np.round(result.fun, decimals=3))
+        t_group.append(np.round(result.x, decimals=3))
+    return P, t_group
+
 
 # # Test main
 genome = random_genome(GENOME_LENGTH)
 N, G_activity = decode(genome)
 print(f"Genome: {genome}")
-print(f"Activities in group: {G_activity}")
-G_component = mapping_activity_to_componentID(map_activity_to_IDcomponent, G_activity)
-print(f"Components ID in group: {G_component}")
-G_duration, G_total_duration = mapping_IDcomponent_to_duration(G_component)
-print(f"Durations in group: {G_duration}")
-print(f"Total durations in group: {G_total_duration}")
-# B_S = saveup_cost_saving(G_activity, C_s)
-# print(B_S)
-_, sum_di = mapping_IDcomponent_to_duration(G_component)
-assert G_total_duration.all() == sum_di.all() 
+print(f"Activities in each group: {G_activity}")
+B_S = saveup_cost_saving(G_activity, C_s)
+print(f"Setup cost saving in each group: {B_S}")
+B_U = unavailability_cost_saving(G_activity, C_d, m, w_max)
+print(f"Unavailability cost saving in each group: {B_U}")
+
+# G_component = mapping_activity_to_componentID(map_activity_to_IDcomponent, G_activity)
+# print(f"Components in each group: {G_component}")
+
+# G_alpha = mapping_IDcomponent_to_alpha(G_component)
+# print(f"Alpha in each group: {G_alpha}")
+
+# G_beta = mapping_IDcomponent_to_beta(G_component)
+# print(f"Beta in each group: {G_beta}")
+
+# replacement_time = mapping_activity_to_replacement_time(map_activity_to_replacement_time, G_activity)
+# print(f"Replacement time in each group: {replacement_time}")
+
+P, _ = penalty_cost(G_activity)
+print(f"Penalty cost: {P}")
+
+EB = np.array(B_S) + np.array(B_U) - np.array(P)
+
+print(f"Cost benefit EB = B_S + B_U + P: {EB}")
 
 
