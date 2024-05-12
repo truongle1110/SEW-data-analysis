@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize
+from multiprocessing import Pool, cpu_count
 
 """
     Nc -- number of component
@@ -308,13 +309,19 @@ def mutate(genome, p_m):
         genome[i], genome[j] = genome[j], genome[i]
     return genome
 
+# Evaluate fitness of the population in parallel
+def evaluate_population(population):
+    with Pool(cpu_count()) as p:
+        fitness_values = p.map(fitness_function, population)
+    return list(fitness_values)
+
 def genetic_algorithm(genome_length, m, population_size, generations, p_c_min, p_c_max, p_m_min, p_m_max):
     population = init_population(population_size, genome_length)
     best_solution = None
     best_fitness_value = -float('inf')
     for generation in range(generations):
-        fitness_values = [fitness_function(genome) for genome in population]
-        print("Fitness value: ", fitness_values)
+        fitness_values = evaluate_population(population)
+        # print("Fitness value: ", fitness_values)
         # Elitism
         sorted_population = [x for _, x in sorted(zip(fitness_values, population), reverse=True)]
         new_population = sorted_population[:2]
@@ -351,8 +358,6 @@ def genetic_algorithm(genome_length, m, population_size, generations, p_c_min, p
     return best_solution, best_fitness_value
 
 
-
-
-
-best_individual, best_fitness = genetic_algorithm(GENOME_LENGTH, m, POPULATION_SIZE, GENERATIONS, p_c_min, p_c_max, p_m_min, p_m_max)
-print(f"The best individual is: {best_individual} with fitness: {best_fitness}")
+if __name__ == '__main__':
+    best_individual, best_fitness = genetic_algorithm(GENOME_LENGTH, m, POPULATION_SIZE, GENERATIONS, p_c_min, p_c_max, p_m_min, p_m_max)
+    print(f"The best individual is: {best_individual} with fitness: {best_fitness}")
