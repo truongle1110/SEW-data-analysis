@@ -2,4 +2,5 @@
 analyze SEW data
 How to run
 
+pip freeze > requirement.txt
 
