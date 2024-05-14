@@ -266,14 +266,15 @@ def penalty_cost(G_activity):
         t_group.append(np.round(result.x, decimals=3))
     return P, t_group
 
-# cost benefit EB = B_S + B_U + P
+# cost benefit EB = B_S + B_U - P
 def cost_benefit(B_S, B_U, P):
     EB = np.array(B_S) + np.array(B_U) - np.array(P)
     return EB
 
 # # Test main
-genome = random_genome(GENOME_LENGTH)
-# genome = [20, 6, 13, 16, 12, 9, 11, 18, 14, 3, 21, 12, 9, 10, 21, 11, 18, 8, 17, 1, 15]
+# genome = random_genome(GENOME_LENGTH)
+genome = [1, 7, 1, 1, 2, 7, 4, 4, 7, 5, 8, 2, 6, 8, 2, 5, 8, 3, 6, 3, 6]
+# genome = [1, 13, 1, 1, 7, 16, 21, 21, 13, 12, 7, 9, 11, 20, 7, 2, 20, 10, 11, 10, 11]
 N, G_activity = decode(genome)
 print(f"Genome: {genome}")
 print(f"Activities in each group: {G_activity}")
@@ -282,17 +283,17 @@ print(f"Setup cost saving in each group: {B_S}")
 B_U = unavailability_cost_saving(G_activity, C_d, m, w_max)
 print(f"Unavailability cost saving in each group: {B_U}")
 
-# G_component = mapping_activity_to_componentID(map_activity_to_IDcomponent, G_activity)
-# print(f"Components in each group: {G_component}")
+G_component = mapping_activity_to_componentID(map_activity_to_IDcomponent, G_activity)
+print(f"Components in each group: {G_component}")
 
-# G_alpha = mapping_IDcomponent_to_alpha(G_component)
-# print(f"Alpha in each group: {G_alpha}")
+G_alpha = mapping_IDcomponent_to_alpha(G_component)
+print(f"Alpha in each group: {G_alpha}")
 
-# G_beta = mapping_IDcomponent_to_beta(G_component)
-# print(f"Beta in each group: {G_beta}")
+G_beta = mapping_IDcomponent_to_beta(G_component)
+print(f"Beta in each group: {G_beta}")
 
-# replacement_time = mapping_activity_to_replacement_time(map_activity_to_replacement_time, G_activity)
-# print(f"Replacement time in each group: {replacement_time}")
+replacement_time = mapping_activity_to_replacement_time(map_activity_to_replacement_time, G_activity)
+print(f"Replacement time in each group: {replacement_time}")
 
 P, _ = penalty_cost(G_activity)
 print(f"Penalty cost: {P}")

@@ -361,3 +361,4 @@ def genetic_algorithm(genome_length, m, population_size, generations, p_c_min, p
 if __name__ == '__main__':
     best_individual, best_fitness = genetic_algorithm(GENOME_LENGTH, m, POPULATION_SIZE, GENERATIONS, p_c_min, p_c_max, p_m_min, p_m_max)
     print(f"The best individual is: {best_individual} with fitness: {best_fitness}")
+    print(f"Optimal group: {decode(best_individual)}")
