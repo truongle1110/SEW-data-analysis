@@ -312,7 +312,7 @@ def genetic_algorithm(genome_length, m, population_size, generations, p_c_min, p
     population = init_population(population_size, genome_length)
     best_solution = None
     best_fitness_value = -float('inf')
-    for generation in range(3):
+    for generation in range(generations):
         fitness_values = [fitness_function(genome) for genome in population]
         # print("Fitness value: ", fitness_values)
         # Elitism
@@ -351,7 +351,7 @@ def genetic_algorithm(genome_length, m, population_size, generations, p_c_min, p
 
 
 results = []
-for i in range(2):
+for i in range(20):
     best_individual, best_fitness = genetic_algorithm(GENOME_LENGTH, m, POPULATION_SIZE, GENERATIONS, p_c_min, p_c_max, p_m_min, p_m_max)
     print(f"The best individual is: {best_individual} with fitness: {best_fitness}")
     results.append(list[i, best_individual, best_fitness])
