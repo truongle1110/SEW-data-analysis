@@ -353,7 +353,7 @@ def genetic_algorithm(genome_length, m, population_size, generations, p_c_min, p
             best_fitness_value = current_best_fitness
             best_solution = sorted_population[0]
         
-        print(f"Generation {generation}: Best fitness = {best_fitness_value}")
+        print(f"Generation {generation} | Best fitness = {best_fitness_value} | Best genome: {best_solution}")
     
     return best_solution, best_fitness_value
 

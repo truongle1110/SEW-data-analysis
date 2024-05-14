@@ -312,7 +312,7 @@ def genetic_algorithm(genome_length, m, population_size, generations, p_c_min, p
     population = init_population(population_size, genome_length)
     best_solution = None
     best_fitness_value = -float('inf')
-    for generation in range(100):
+    for generation in range(3):
         fitness_values = [fitness_function(genome) for genome in population]
         # print("Fitness value: ", fitness_values)
         # Elitism
@@ -350,6 +350,14 @@ def genetic_algorithm(genome_length, m, population_size, generations, p_c_min, p
     return best_solution, best_fitness_value
 
 
+results = []
+for i in range(2):
+    best_individual, best_fitness = genetic_algorithm(GENOME_LENGTH, m, POPULATION_SIZE, GENERATIONS, p_c_min, p_c_max, p_m_min, p_m_max)
+    print(f"The best individual is: {best_individual} with fitness: {best_fitness}")
+    results.append(list[i, best_individual, best_fitness])
 
-best_individual, best_fitness = genetic_algorithm(GENOME_LENGTH, m, POPULATION_SIZE, GENERATIONS, p_c_min, p_c_max, p_m_min, p_m_max)
-print(f"The best individual is: {best_individual} with fitness: {best_fitness}")
+def list_to_string(lst, separator=' '):
+    return separator.join(map(str, lst))
+with open('results.txt', 'w') as file:
+    file.write(list_to_string(results))
+
