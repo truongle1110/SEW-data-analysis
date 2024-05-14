@@ -218,7 +218,7 @@ def unavailability_cost_saving(G_activity, C_d, m, w_max):
     # print(f"Durations in group: {G_duration}")
     # print(f"Total durations in group: {G_total_duration}")
     d_Gk = calculate_d_Gk(G_duration, m, w_max)
-    # print(d_Gk)
+    print(d_Gk)
     B_U = (np.array(G_total_duration) - np.array(d_Gk)) * C_d
     return B_U
 
@@ -259,8 +259,8 @@ def penalty_cost(G_activity):
         # Perform the minimization
         result = minimize(wrapper_P_Gk, initial_guess, args=(t_i_list, alpha_i_list, beta_i_list))
         # Print the results
-        # print("Minimum value of the function: ", np.round(result.fun, decimals=3))
-        # print("Value of t at the minimum: ", np.round(result.x, decimals=3))
+        print("Minimum value of the function: ", np.round(result.fun, decimals=3))
+        print("Value of t at the minimum: ", np.round(result.x, decimals=3))
         # print("---------------------------------------------------")
         P.append(np.round(result.fun, decimals=3))
         t_group.append(np.round(result.x, decimals=3))
@@ -273,8 +273,9 @@ def cost_benefit(B_S, B_U, P):
 
 # # Test main
 # genome = random_genome(GENOME_LENGTH)
-genome = [1, 7, 1, 1, 2, 7, 4, 4, 7, 5, 8, 2, 6, 8, 2, 5, 8, 3, 6, 3, 6]
-# genome = [1, 13, 1, 1, 7, 16, 21, 21, 13, 12, 7, 9, 11, 20, 7, 2, 20, 10, 11, 10, 11]
+genome = [1, 7, 1, 1, 2, 7, 4, 4, 7, 5, 8, 2, 6, 8, 2, 5, 8, 3, 6, 3, 6]                    #thai
+# genome = [1, 15, 1, 15, 12, 19, 3, 3, 1, 18, 14, 12, 8, 17, 12, 11, 17, 9, 8, 9, 5]         #new
+# genome = [19, 18, 19, 19, 8, 15, 7, 5, 18, 11, 9, 20, 13, 12, 8, 16, 10, 20, 13, 6, 1]     #test
 N, G_activity = decode(genome)
 print(f"Genome: {genome}")
 print(f"Activities in each group: {G_activity}")

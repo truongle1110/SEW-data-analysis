@@ -351,7 +351,7 @@ def genetic_algorithm(genome_length, m, population_size, generations, p_c_min, p
         current_best_fitness = max(fitness_values)
         if current_best_fitness > best_fitness_value:
             best_fitness_value = current_best_fitness
-            best_solution = sorted_population[population_size-1]
+            best_solution = sorted_population[0]
         
         print(f"Generation {generation}: Best fitness = {best_fitness_value}")
     
