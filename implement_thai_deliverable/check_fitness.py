@@ -276,7 +276,7 @@ def cost_benefit(B_S, B_U, P):
 # genome = [15, 7, 15, 15, 2, 7, 14, 14, 7, 5, 8, 2, 6, 8, 2, 5, 8, 3, 6, 3, 6]                    #thai
 # genome = [1, 15, 1, 15, 12, 19, 3, 3, 1, 18, 14, 12, 8, 17, 12, 11, 17, 9, 8, 9, 5]         #new
 # genome = [13, 12, 13, 13, 1, 21, 5, 5, 12, 11, 7, 1, 15, 14, 1, 15, 14, 17, 8, 17, 8]     #best  3635.569
-genome = [17, 7, 17, 9, 16, 6, 1, 8, 7, 10, 3, 16, 2, 12, 16, 2, 12, 13, 4, 19, 15]        #test
+genome = [17, 7, 17, 19, 16, 15, 8, 8, 7, 6, 4, 16, 9, 12, 16, 9, 12, 13, 2, 13, 2]        #test
 N, G_activity = decode(genome)
 print(f"Genome: {genome}")
 print(f"Activities in each group: {G_activity}")
