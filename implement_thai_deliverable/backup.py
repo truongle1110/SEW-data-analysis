@@ -42,10 +42,12 @@ map_activity_to_IDcomponent = list(zip(ID_activity, ID_component))      # list o
 map_activity_to_replacement_time = list(zip(ID_activity, t))            # list of tuple (ID_component, ID_activity)
 
 GENOME_LENGTH = 21                                                      # number of possible group
-POPULATION_SIZE = 100
-MUTATION_RATE = 0.01
-CROSSOVER_RATE = 0.7
+POPULATION_SIZE = 60
 GENERATIONS = 2000
+p_c_min = 0.6
+p_c_max = 0.9
+p_m_min = 0.01
+p_m_max = 0.1
 
 C_s = 500
 C_d = 100
@@ -142,6 +144,7 @@ def mapping_IDcomponent_to_duration(G_component):
         total_duration.append(sum(duration))
     return group_to_duration, total_duration                            # total_duration: sum_di
 
+
 # mapping group of component to group of alpha using output from mapping_activity_to_componentID()
 def mapping_IDcomponent_to_alpha(G_component):
     group_to_alpha = []
@@ -152,6 +155,7 @@ def mapping_IDcomponent_to_alpha(G_component):
             alpha.append(value)
         group_to_alpha.append((group, alpha))
     return group_to_alpha
+
 
 # mapping group of component to group of beta using output from mapping_activity_to_componentID()
 def mapping_IDcomponent_to_beta(G_component):
@@ -213,12 +217,8 @@ def saveup_cost_saving(G_activity, C_s):
 # unavailability cost saving
 def unavailability_cost_saving(G_activity, C_d, m, w_max):
     G_component = mapping_activity_to_componentID(map_activity_to_IDcomponent, G_activity)
-    # print(f"Components ID in group: {G_component}")
     G_duration, G_total_duration = mapping_IDcomponent_to_duration(G_component)
-    # print(f"Durations in group: {G_duration}")
-    # print(f"Total durations in group: {G_total_duration}")
     d_Gk = calculate_d_Gk(G_duration, m, w_max)
-    print(d_Gk)
     B_U = (np.array(G_total_duration) - np.array(d_Gk)) * C_d
     return B_U
 
@@ -253,60 +253,157 @@ def penalty_cost(G_activity):
         group, alpha_i_list = G_alpha[i]
         _, beta_i_list = G_beta[i]
         _, t_i_list = replacement_time[i]
-        # print(f"Replacement time: {t_i_list}, Alpha: {alpha_i_list}, Beta: {beta_i_list}")
         # Initial guess for t
         initial_guess = [0.0]
         # Perform the minimization
         result = minimize(wrapper_P_Gk, initial_guess, args=(t_i_list, alpha_i_list, beta_i_list))
-        # Print the results
-        print("Minimum value of the function: ", np.round(result.fun, decimals=3))
-        print("Value of t at the minimum: ", np.round(result.x, decimals=3))
-        # print("---------------------------------------------------")
         P.append(np.round(result.fun, decimals=3))
         t_group.append(np.round(result.x, decimals=3))
     return P, t_group
 
-# cost benefit EB = B_S + B_U - P
+# cost benefit EB = B_S + B_U + P
 def cost_benefit(B_S, B_U, P):
     EB = np.array(B_S) + np.array(B_U) - np.array(P)
     return EB
 
-# # Test main
+# fitness function
+def fitness_function(genome):
+    N, G_activity = decode(genome)  
+    B_S = saveup_cost_saving(G_activity, C_s)
+    B_U = unavailability_cost_saving(G_activity, C_d, m, w_max)
+    P, _ = penalty_cost(G_activity)
+    EB = cost_benefit(B_S, B_U, P)
+    fitness_value = np.sum(EB)
+    return fitness_value
+
+
+# ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
+# # # ## ## ## ## ## ## ## ## ## ## ## # Test main # ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
+
 # genome = random_genome(GENOME_LENGTH)
-# genome = [15, 7, 15, 15, 2, 7, 14, 14, 7, 5, 8, 2, 6, 8, 2, 5, 8, 3, 6, 3, 6]                    #thai
-# genome = [1, 15, 1, 15, 12, 19, 3, 3, 1, 18, 14, 12, 8, 17, 12, 11, 17, 9, 8, 9, 5]         #new
-# genome = [13, 12, 13, 13, 1, 21, 5, 5, 12, 11, 7, 1, 15, 14, 1, 15, 14, 17, 8, 17, 8]     #best  3635.569
-genome = [17, 7, 17, 9, 16, 6, 1, 8, 7, 10, 3, 16, 2, 12, 16, 2, 12, 13, 4, 19, 15]        #test
-N, G_activity = decode(genome)
-print(f"Genome: {genome}")
-print(f"Activities in each group: {G_activity}")
-B_S = saveup_cost_saving(G_activity, C_s)
-print(f"Setup cost saving in each group: {B_S}")
-B_U = unavailability_cost_saving(G_activity, C_d, m, w_max)
-print(f"Unavailability cost saving in each group: {B_U}")
+# print(genome)
+# fitness_value = fitness_function(genome)
+# print("Fitness value = ", fitness_value)
 
-G_component = mapping_activity_to_componentID(map_activity_to_IDcomponent, G_activity)
-print(f"Components in each group: {G_component}")
 
-G_alpha = mapping_IDcomponent_to_alpha(G_component)
-print(f"Alpha in each group: {G_alpha}")
+# def linear_ranking_selection(population, fitness_values):
+#     sorted_population = [x for _, x in sorted(zip(fitness_values, population))]
+#     probabilities = [(2*(i+1))/(POPULATION_SIZE*(POPULATION_SIZE+1)) for i in range(POPULATION_SIZE)]
+#     print("prob",probabilities)
+#     print(len(probabilities))
+#     selected = random.choices(sorted_population, weights=probabilities, k=len(population))
+#     return selected
 
-G_beta = mapping_IDcomponent_to_beta(G_component)
-print(f"Beta in each group: {G_beta}")
 
-replacement_time = mapping_activity_to_replacement_time(map_activity_to_replacement_time, G_activity)
-print(f"Replacement time in each group: {replacement_time}")
+def linear_ranking_selection(population, fitness_values, num_groups=5):
+    population_size = len(population)
+    # Sort the population based on fitness
+    sorted_population = [x for _, x in sorted(zip(fitness_values, population))]
+    # Determine the size of each group
+    group_size = population_size // num_groups
+    # Assign selection probabilities to each group
+    group_probabilities = [0.05, 0.10, 0.15, 0.25, 0.45]
+    # Ensure that the sum of group probabilities is 1
+    assert sum(group_probabilities) == 1, "Group probabilities must sum to 1"
+    # Initialize list for selected individuals
+    selected = []
+    for _ in range(population_size):
+        # Select a group based on the group probabilities
+        group_index = random.choices(range(num_groups), weights=group_probabilities, k=1)[0]
+        # Determine the start and end indices of the group in the sorted population
+        start_index = group_index * group_size
+        end_index = start_index + group_size
+        # Handle the case where the last group may have fewer members due to integer division
+        if group_index == num_groups - 1:
+            end_index = population_size
+        # Select a random individual from the chosen group
+        selected_individual = random.choice(sorted_population[start_index:end_index])
+        selected.append(selected_individual)
+    return selected
 
-P, _ = penalty_cost(G_activity)
-print(f"Penalty cost: {P}")
 
-EB = cost_benefit(B_S, B_U, P)
-print(f"Cost benefit EB = B_S + B_U + P: {EB}")
+def crossover(parent1, parent2, p_c):
+    if random.random() < p_c:
+        point1 = random.randint(1, len(parent1) - 2)
+        point2 = random.randint(point1, len(parent1) - 1)
+        child1 = parent1[:point1] + parent2[point1:point2] + parent1[point2:]
+        child2 = parent2[:point1] + parent1[point1:point2] + parent2[point2:]
+        return child1, child2
+    else:
+        return parent1, parent2
 
-def fitness(EB):
-    return np.sum(EB)
+def mutate(genome, p_m):
+    if random.random() < p_m:
+        i, j = random.sample(range(len(genome)), 2)
+        genome[i], genome[j] = genome[j], genome[i]
+    return genome
 
-a = fitness(EB)
-print(a)
+def genetic_algorithm(genome_length, m, population_size, generations, p_c_min, p_c_max, p_m_min, p_m_max):
+    population = init_population(population_size, genome_length)
+    best_solution = None
+    best_fitness_value = -float('inf')
+    for generation in range(generations):
+        fitness_values = [fitness_function(genome) for genome in population]
+        map_fitness_to_population = sorted(zip(fitness_values, population), reverse=True)
+        # print("map value: ", list(map_fitness_to_population))
+        # Update best solution
+        current_best_fitness = map_fitness_to_population[0][0]
+        current_best_genome = map_fitness_to_population[0][1]
+        
+        if current_best_fitness >= best_fitness_value:
+            best_fitness_value = current_best_fitness
+            best_solution = current_best_genome
+        
+        print(f"             | Best fitness = {map_fitness_to_population[0][0]} | Best genome: {map_fitness_to_population[0][1]}")
+        print(f"Generation {generation} | Best fitness = {best_fitness_value} | Best genome: {best_solution}")
+
+        # Elitism
+        sorted_population = [x for _, x in map_fitness_to_population]
+        new_population = sorted_population[:2]
+        sorted_values = [e for e, _ in map_fitness_to_population]
+        # new_values = sorted_values[:2]
+        # debug
+        # print(fitness_function(new_population[0]))
+        # print(max(fitness_values))
+        # assert fitness_function(new_population[0]) == max(fitness_values)
+        # print("max finess values", new_values)
+        # print("max individuals: ", new_population)
+        f_avg = np.mean(fitness_values)
+        f_max = np.max(fitness_values)
+
+        # Linear ranking selection and crossover
+        selected = linear_ranking_selection(population, fitness_values)
+        # print(selected)
+        for i in range(2, len(selected), 2):
+            parent1 = selected[i]
+            parent2 = selected[i+1]
+            f_c = max(fitness_function(parent1), fitness_function(parent2))
+            p_c = p_c_max - ((p_c_max - p_c_min) * (f_c - f_avg) / (f_max - f_avg)) if f_c > f_avg else p_c_max
+            child1, child2 = crossover(parent1, parent2, p_c)
+            new_population.extend([child1, child2])
+        # Mutation
+        for i in range(2, len(new_population)):
+            f_m = fitness_function(new_population[i])
+            p_m = p_m_max - ((p_m_max - p_m_min) * (f_max - f_m) / (f_max - f_avg)) if f_m > f_avg else p_m_max
+            new_population[i] = mutate(new_population[i], p_m)
+        
+        population = new_population
+
+
+
+        # assert current_best_fitness == sorted_values[0]
+        # a  = list(map_fitness_to_population)[0]
+        # print(a)
+        # if current_best_fitness > best_fitness_value:
+        #     best_fitness_value = current_best_fitness
+        #     best_solution = population[fitness_values.index(best_fitness_value)]
+        
+        # print(f"Generation {generation} | Best fitness = {best_fitness_value} | Best genome: {best_solution}")
+    return best_solution, best_fitness_value
+
+
+# genetic_algorithm(GENOME_LENGTH, m, POPULATION_SIZE, GENERATIONS, p_c_min, p_c_max, p_m_min, p_m_max)
+best_individual, best_fitness = genetic_algorithm(GENOME_LENGTH, m, POPULATION_SIZE, GENERATIONS, p_c_min, p_c_max, p_m_min, p_m_max)
+print(f"The best individual is: {best_individual} with fitness: {best_fitness}")
 
 

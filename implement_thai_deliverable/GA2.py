@@ -314,11 +314,23 @@ def genetic_algorithm(genome_length, m, population_size, generations, p_c_min, p
     best_fitness_value = -float('inf')
     for generation in range(generations):
         fitness_values = [fitness_function(genome) for genome in population]
-        # print("Fitness value: ", fitness_values)
-        # Elitism
-        sorted_population = [x for _, x in sorted(zip(fitness_values, population), reverse=True)]
-        new_population = sorted_population[:2]
+        map_fitness_to_population = sorted(zip(fitness_values, population), reverse=True)
+        # print("map value: ", list(map_fitness_to_population))
+        # Update best solution
+        current_best_fitness = map_fitness_to_population[0][0]
+        current_best_genome = map_fitness_to_population[0][1]
+        
+        if current_best_fitness >= best_fitness_value:
+            best_fitness_value = current_best_fitness
+            best_solution = current_best_genome
+        
+        print(f"Generation {generation} | Best fitness = {best_fitness_value} | Best genome: {best_solution}")
 
+        # Elitism
+        sorted_population = [x for _, x in map_fitness_to_population]
+
+        new_population = sorted_population[:2]
+        # print("max finess values", sorted_population[:2])
         f_avg = np.mean(fitness_values)
         f_max = np.max(fitness_values)
 
@@ -340,15 +352,7 @@ def genetic_algorithm(genome_length, m, population_size, generations, p_c_min, p
 
         population = new_population
 
-        # Update best solution
-        current_best_fitness = max(fitness_values)
-        if current_best_fitness > best_fitness_value:
-            best_fitness_value = current_best_fitness
-            best_solution = sorted_population[0]
-        
-        print(f"Generation {generation} | Best fitness = {best_fitness_value} | Best genome: {best_solution}")
     return best_solution, best_fitness_value
-
 
 results = []
 for i in range(20):
