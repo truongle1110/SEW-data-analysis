@@ -321,16 +321,28 @@ def genetic_algorithm(genome_length, m, population_size, generations, p_c_min, p
     best_fitness_value = -float('inf')
     for generation in range(generations):
         fitness_values = evaluate_population(population)
-        # print("Fitness value: ", fitness_values)
-        # Elitism
-        sorted_population = [x for _, x in sorted(zip(fitness_values, population), reverse=True)]
-        new_population = sorted_population[:2]
+        map_fitness_to_population = sorted(zip(fitness_values, population), reverse=True)
+        # print("map value: ", list(map_fitness_to_population))
+        # Update best solution
+        current_best_fitness = map_fitness_to_population[0][0]
+        current_best_genome = map_fitness_to_population[0][1]
+        
+        if current_best_fitness >= best_fitness_value:
+            best_fitness_value = current_best_fitness
+            best_solution = current_best_genome
+        
+        print(f"Generation {generation} | Best fitness = {best_fitness_value} | Best genome: {best_solution}")
 
+        # Elitism
+        sorted_population = [x for _, x in map_fitness_to_population]
+        new_population = sorted_population[:2]
+   
         f_avg = np.mean(fitness_values)
         f_max = np.max(fitness_values)
 
         # Linear ranking selection and crossover
         selected = linear_ranking_selection(population, fitness_values)
+      
         for i in range(2, len(selected), 2):
             parent1 = selected[i]
             parent2 = selected[i+1]
@@ -338,16 +350,14 @@ def genetic_algorithm(genome_length, m, population_size, generations, p_c_min, p
             p_c = p_c_max - ((p_c_max - p_c_min) * (f_c - f_avg) / (f_max - f_avg)) if f_c > f_avg else p_c_max
             child1, child2 = crossover(parent1, parent2, p_c)
             new_population.extend([child1, child2])
-
         # Mutation
         for i in range(2, len(new_population)):
             f_m = fitness_function(new_population[i])
             p_m = p_m_max - ((p_m_max - p_m_min) * (f_max - f_m) / (f_max - f_avg)) if f_m > f_avg else p_m_max
             new_population[i] = mutate(new_population[i], p_m)
-
+        
         population = new_population
 
-    
     return best_solution, best_fitness_value
 
 
