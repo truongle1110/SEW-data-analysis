@@ -45,8 +45,8 @@ map_activity_to_replacement_time = list(zip(ID_activity, t))            # list o
 map_activity_to_duration = list(zip(ID_activity, d))                    # list of tuple (ID_activity, d)
 
 GENOME_LENGTH = 123                                                      # number of possible group
-POPULATION_SIZE = 100
-GENERATIONS = 2000
+POPULATION_SIZE = 60
+GENERATIONS = 7000
 p_c_min = 0.6
 p_c_max = 0.9
 p_m_min = 0.01

@@ -389,7 +389,8 @@ def genetic_algorithm(genome_length, m, population_size, generations, p_c_min, p
 
 
 
-genome = random_genome(GENOME_LENGTH)
+# genome = random_genome(GENOME_LENGTH)
+genome = [120, 118, 33, 33, 119, 117, 113, 112, 106, 107, 104, 103, 101, 102, 100, 93, 96, 88, 61, 61, 98, 98, 98, 90, 86, 85, 82, 83, 79, 38, 38, 38, 81, 75, 77, 74, 80, 72, 84, 70, 71, 66, 56, 114, 114, 114, 114, 53, 53, 51, 65, 5, 5, 58, 54, 47, 52, 26, 26, 26, 26, 30, 30, 109, 109, 109, 50, 62, 62, 62, 2, 2, 2, 2, 41, 63, 63, 63, 44, 24, 24, 29, 35, 31, 39, 27, 121, 121, 121, 59, 59, 59, 25, 59, 1, 1, 1, 13, 13, 13, 13, 13, 105, 105, 105, 15, 64, 64, 64, 8, 14, 12, 34, 34, 34, 55, 55, 55, 55, 7, 11, 4, 4]
 N, G_activity = decode(genome)
 print(f"Genome: {genome}")
 print(f"Activities in each group: {G_activity}")
@@ -415,3 +416,6 @@ print(f"Penalty cost: {P}")
 
 EB = cost_benefit(B_S, B_U, P)
 print(f"Cost benefit EB = B_S + B_U - P: {EB}")
+
+a = fitness_function(genome)
+print(a)
