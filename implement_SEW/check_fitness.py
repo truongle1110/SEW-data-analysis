@@ -222,7 +222,7 @@ def saveup_cost_saving(G_activity, C_s):
 def unavailability_cost_saving(G_activity, C_d, m, w_max):
     G_duration, G_total_duration = mapping_activity_to_duration(map_activity_to_duration, G_activity)
     d_Gk = calculate_d_Gk(G_duration, m, w_max)
-    # print("Gk :", d_Gk)
+    print("Gk :", d_Gk)
     B_U = (np.array(G_total_duration) - np.array(d_Gk)) * C_d
     return B_U
 
@@ -390,7 +390,7 @@ def genetic_algorithm(genome_length, m, population_size, generations, p_c_min, p
 
 
 # genome = random_genome(GENOME_LENGTH)
-genome = [120, 118, 33, 33, 119, 117, 113, 112, 106, 107, 104, 103, 101, 102, 100, 93, 96, 88, 61, 61, 98, 98, 98, 90, 86, 85, 82, 83, 79, 38, 38, 38, 81, 75, 77, 74, 80, 72, 84, 70, 71, 66, 56, 114, 114, 114, 114, 53, 53, 51, 65, 5, 5, 58, 54, 47, 52, 26, 26, 26, 26, 30, 30, 109, 109, 109, 50, 62, 62, 62, 2, 2, 2, 2, 41, 63, 63, 63, 44, 24, 24, 29, 35, 31, 39, 27, 121, 121, 121, 59, 59, 59, 25, 59, 1, 1, 1, 13, 13, 13, 13, 13, 105, 105, 105, 15, 64, 64, 64, 8, 14, 12, 34, 34, 34, 55, 55, 55, 55, 7, 11, 4, 4]
+genome = [123, 119, 118, 116, 115, 115, 113, 105, 72, 72, 72, 108, 108, 97, 97, 104, 103, 102, 41, 41, 101, 101, 110, 110, 94, 59, 59, 92, 90, 14, 14, 82, 82, 122, 122, 88, 64, 64, 64, 87, 84, 77, 69, 67, 66, 49, 49, 63, 63, 65, 56, 56, 56, 62, 48, 47, 83, 83, 114, 114, 83, 35, 35, 53, 53, 6, 6, 43, 121, 121, 121, 121, 121, 121, 42, 39, 78, 78, 38, 58, 58, 36, 37, 34, 33, 31, 61, 61, 30, 30, 29, 29, 26, 26, 46, 46, 46, 100, 100, 81, 81, 81, 23, 79, 79, 60, 60, 60, 60, 60, 70, 70, 22, 24, 24, 51, 51, 9, 9, 7, 4, 2, 2]
 N, G_activity = decode(genome)
 print(f"Genome: {genome}")
 print(f"Activities in each group: {G_activity}")
@@ -398,7 +398,7 @@ B_S = saveup_cost_saving(G_activity, C_s)
 print(f"Setup cost saving in each group: {B_S}")
 G_component = mapping_activity_to_componentID(map_activity_to_IDcomponent, G_activity)
 print(f"Components ID in group: {G_component}")
-# G_duration, G_total_duration = mapping_activity_to_duration(map_activity_to_duration, G_activity)
+G_duration, G_total_duration = mapping_activity_to_duration(map_activity_to_duration, G_activity)
 # print(f"Durations in group: {G_duration}")
 # print(f"Total durations in group: {G_total_duration}")
 B_U = unavailability_cost_saving(G_activity, C_d, m, w_max)
@@ -413,9 +413,11 @@ print(f"Replacement time in each group: {replacement_time}")
 
 P, t_group = penalty_cost(G_activity)
 print(f"Penalty cost: {P}")
+print(f"Execution time: {t_group}")
+
 
 EB = cost_benefit(B_S, B_U, P)
 print(f"Cost benefit EB = B_S + B_U - P: {EB}")
 
 a = fitness_function(genome)
-print(a)
+print("Fitness value: ",a)
