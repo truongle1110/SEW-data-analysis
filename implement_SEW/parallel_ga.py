@@ -46,7 +46,7 @@ map_activity_to_duration = list(zip(ID_activity, d))                    # list o
 
 GENOME_LENGTH = 123                                                      # number of possible group
 POPULATION_SIZE = 60
-GENERATIONS = 7000
+GENERATIONS = 100000
 p_c_min = 0.6
 p_c_max = 0.9
 p_m_min = 0.01
@@ -65,7 +65,10 @@ def random_genome(length):
     
 # initialize population
 def init_population(population_size, genome_length):
-    return [random_genome(genome_length) for _ in range(population_size)]
+    # known_good_solution = [123, 119, 118, 116, 115, 115, 113, 105, 72, 72, 72, 108, 108, 97, 97, 104, 103, 102, 41, 41, 101, 101, 110, 110, 94, 59, 59, 92, 90, 14, 14, 82, 82, 122, 122, 88, 64, 64, 64, 87, 84, 77, 69, 67, 66, 49, 49, 63, 63, 65, 56, 56, 56, 62, 48, 47, 83, 83, 114, 114, 83, 35, 35, 53, 53, 6, 6, 43, 121, 121, 121, 121, 121, 121, 42, 39, 78, 78, 38, 58, 58, 36, 37, 34, 33, 31, 61, 61, 30, 30, 29, 29, 26, 26, 46, 46, 46, 100, 100, 81, 81, 81, 23, 79, 79, 60, 60, 60, 60, 60, 70, 70, 22, 24, 24, 51, 51, 9, 9, 7, 4, 2, 2]
+    population = [random_genome(genome_length) for _ in range(population_size)]
+    # population[0] = known_good_solution
+    return population
 
 # evaluation
 def decode(genome):
