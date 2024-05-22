@@ -45,7 +45,7 @@ map_activity_to_duration = list(zip(ID_activity, d))                    # list o
 
 GENOME_LENGTH = 123                                                      # number of possible group
 POPULATION_SIZE = 100
-GENERATIONS = 2000
+GENERATIONS = 100000
 p_c_min = 0.6
 p_c_max = 0.9
 p_m_min = 0.01
