@@ -50,7 +50,7 @@ GENERATIONS = 1500
 C_s = 500
 C_d = 100
 
-m = 2                                                                   # Number of repairmen
+m = 1                                                                   # Number of repairmen
 w_max = 7                                                               # Maximum number of iterations for binary search
 
 # initialize genome
@@ -215,7 +215,7 @@ def unavailability_cost_saving(G_activity, C_d, m, w_max):
     G_component = mapping_activity_to_componentID(map_activity_to_IDcomponent, G_activity)
     # print(f"Components ID in group: {G_component}")
     G_duration, G_total_duration = mapping_IDcomponent_to_duration(G_component)
-    # print(f"Durations in group: {G_duration}")
+    print(f"Durations in group: {G_duration}")
     # print(f"Total durations in group: {G_total_duration}")
     d_Gk = calculate_d_Gk(G_duration, m, w_max)
     print(d_Gk)
@@ -272,11 +272,8 @@ def cost_benefit(B_S, B_U, P):
     return EB
 
 # # Test main
-genome = random_genome(GENOME_LENGTH)
-# genome = [15, 7, 15, 15, 2, 7, 14, 14, 7, 5, 8, 2, 6, 8, 2, 5, 8, 3, 6, 3, 6]                    #thai
-# genome = [1, 15, 1, 15, 12, 19, 3, 3, 1, 18, 14, 12, 8, 17, 12, 11, 17, 9, 8, 9, 5]         #new
-# genome = [13, 12, 13, 13, 1, 21, 5, 5, 12, 11, 7, 1, 15, 14, 1, 15, 14, 17, 8, 17, 8]     #best  3635.569
-# genome = [17, 2, 10, 16, 4, 9, 14, 19, 2, 6, 18, 4, 3, 5, 16, 11, 12, 8, 13, 20, 21]        #test
+# genome = random_genome(GENOME_LENGTH)
+genome = [13, 15, 17, 9, 8, 13, 15, 14, 12, 2, 6, 4, 5, 3, 14, 5, 12]    #1496.6997279200023
 N, G_activity = decode(genome)
 print(f"Genome: {genome}")
 print(f"Activities in each group: {G_activity}")
