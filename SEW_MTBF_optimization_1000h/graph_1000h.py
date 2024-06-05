@@ -17,6 +17,11 @@ downtime = df1['downtime']
 # print(failure_time_distribution)
 # print(downtime)
 
+file_path_2 = 'MTBF.xlsx'
+df2 = pd.read_excel(file_path_2)
+
+
+
 
 # --------------------------------- POSTE DE CONTRÔLE ---------------------------------
 result_POSTE_DE_CONTROLE = np.where(df1 == "POSTE DE CONTRÔLE")
@@ -300,19 +305,42 @@ data_POSTE_14 = [(x, y) for x, y in zip(data_failure_time_distribution_POSTE_14,
 
 
 
+MTBF_POSTE_DE_CONTROLE = df2.loc[np.where(df2 == "POSTE DE CONTRÔLE")[0], "80% MTBF"]
+MTBF_CONNECTEURS = df2.loc[np.where(df2 == "CONNECTEURS")[0], "80% MTBF"]
+MTBF_POSTE_09 = df2.loc[np.where(df2 == "POSTE 09 : MONTAGE CÔTÉ A (RETOURNEMENTS)")[0], "80% MTBF"]
+MTBF_POSTE_04 = df2.loc[np.where(df2 == "POSTE 04  : EMMANCHEMENTS ROULEMENTS (PRESSE)")[0], "80% MTBF"]
+MTBF_CONVOYEURS = df2.loc[np.where(df2 == "CONVOYEURS")[0], "80% MTBF"]
+MTBF_LIGNE_DE_MONTAGE_MOTG02 = df2.loc[np.where(df2 == "LIGNE DE MONTAGE MOTG02")[0], "80% MTBF"]
+MTBF_POSTE_02 = df2.loc[np.where(df2 == "POSTE 02 : ENTRÉE PLATEAUX PLEIN")[0], "80% MTBF"]
+MTBF_POSTE_15 = df2.loc[np.where(df2 == "POSTE 15 : CONTRÔLE HAUTE TENSION")[0], "80% MTBF"]
+MTBF_MAGASIN = df2.loc[np.where(df2 == "MAGASIN PLATEAUX VIDES")[0], "80% MTBF"]
+MTBF_ASCENSEUR_DE_SORTIE = df2.loc[np.where(df2 == "ASCENSEUR DE SORTIE")[0], "80% MTBF"]
+MTBF_MM = df2.loc[np.where(df2 == "MM-TAILLE1")[0], "80% MTBF"]
+MTBF_ASCENSEUR = df2.loc[np.where(df2 == "ASCENSEUR")[0], "80% MTBF"]
+MTBF_KTM6 = df2.loc[np.where(df2 == "KTM6")[0], "80% MTBF"]
+MTBF_PINCE = df2.loc[np.where(df2 == "PINCE")[0], "80% MTBF"]
+MTBF_POSTE_05 = df2.loc[np.where(df2 == "POSTE 05 : MONTAGE ENTRAINEURS")[0], "80% MTBF"]
+MTBF_KTM5 = df2.loc[np.where(df2 == "KTM5")[0], "80% MTBF"]
+MTBF_EMMANCHEMENT = df2.loc[np.where(df2 == "EMMANCHEMENT")[0], "80% MTBF"]
+MTBF_CHAUFFE_VENTILATEURS = df2.loc[np.where(df2 == "CHAUFFE VENTILATEURS")[0], "80% MTBF"]
+MTBF_ECRANS = df2.loc[np.where(df2 == "ECRANS")[0], "80% MTBF"]
+MTBF_DIVERS = df2.loc[np.where(df2 == "DIVERS")[0], "80% MTBF"]
+MTBF_EI7 = df2.loc[np.where(df2 == "EI7-BARRETTE")[0], "80% MTBF"]
+MTBF_POSTE_06A = df2.loc[np.where(df2 == "POSTE 06A : MONTAGE FREINS + SERRAGE TIRANTS")[0], "80% MTBF"]
+MTBF_TRANSLATION = df2.loc[np.where(df2 == "TRANSLATION")[0], "80% MTBF"]
+MTBF_CONVOYEUR_COTE = df2.loc[np.where(df2 == "CONVOYEUR CÔTÉ CONTRÔLE")[0], "80% MTBF"]
+MTBF_ASCENSEUR_SORTIE = df2.loc[np.where(df2 == "ASCENSEUR SORTIE")[0], "80% MTBF"]
+MTBF_VISSEUSES = df2.loc[np.where(df2 == "VISSEUSES ÉLECTRIQUE")[0], "80% MTBF"]
+MTBF_POSTE_07 = df2.loc[np.where(df2 == "POSTE 07 : MONTAGE CAPOT + SOUPAPES")[0], "80% MTBF"]
+MTBF_POSTE_14 = df2.loc[np.where(df2 == "POSTE 14 : CONTRÔLE MISE Á LA TERRE")[0], "80% MTBF"]
+
+print(MTBF_POSTE_DE_CONTROLE.iloc[0])
 
 
 
 
 
 
-
-
-
-
-
-
-"""
 
 # Horizontal bar plot with gaps
 fig, ax = plt.subplots()
@@ -322,56 +350,90 @@ fig, ax = plt.subplots()
 # ax.broken_barh(data_POSTE_04, (33, 4), facecolors='blue')
 # ax.broken_barh(data_CONVOYEURS, (23, 4), facecolors='blue')
 # ax.broken_barh(data_LIGNE_DE_MONTAGE_MOTG02, (13, 4), facecolors='blue')
-ax.set_xlim(-100, 5500)
-ax.set_ylim(7, 320)
+ax.set_xlim(-10, 1000)
+ax.set_ylim(240, 310)
 ax.set_xlabel('Time')
 ax.set_ylabel('Component')
-ax.set_yticks([295, 285, 275, 265, 255, 245, 235, 225, 215, 205, 195, 185, 175, 165, 155, 145, 135, 125, 115, 105, 95, 85, 75, 65, 55, 45, 35, 25], labels=['POSTE DE CONTRÔLE', 'CONNECTEURS', 'POSTE 09 : MONTAGE CÔTÉ A (RETOURNEMENTS)', 'POSTE 04  : EMMANCHEMENTS ROULEMENTS (PRESSE)', 'CONVOYEURS', 'LIGNE DE MONTAGE MOTG02', 'POSTE 02 : ENTRÉE PLATEAUX PLEIN', 'POSTE 15 : CONTRÔLE HAUTE TENSION', 'MAGASIN PLATEAUX VIDES', 'ASCENSEUR DE SORTIE', 'MM-TAILLE1', 'ASCENSEUR', 'KTM6', 'PINCE', 'POSTE 05 : MONTAGE ENTRAINEURS', 'KTM5', 'EMMANCHEMENT', 'CHAUFFE VENTILATEURS', 'ECRANS', 'DIVERS', 'EI7-BARRETTE', 'POSTE 06A : MONTAGE FREINS + SERRAGE TIRANTS', 'TRANSLATION', 'CONVOYEUR CÔTÉ CONTRÔLE', 'ASCENSEUR SORTIE', 'VISSEUSES ÉLECTRIQUE', 'POSTE 07 : MONTAGE CAPOT + SOUPAPES', 'POSTE 14 : CONTRÔLE MISE Á LA TERRE'])     # Modify y-axis tick labels
+ax.set_yticks([295, 285, 275, 265, 255, 245], labels=['POSTE DE CONTRÔLE', 'CONNECTEURS', 'POSTE 09 : MONTAGE CÔTÉ A (RETOURNEMENTS)', 'POSTE 04  : EMMANCHEMENTS ROULEMENTS (PRESSE)', 'CONVOYEURS', 'LIGNE DE MONTAGE MOTG02'])     # Modify y-axis tick labels
 
-plt.scatter(data_failure_time_distribution_POSTE_DE_CONTROLE, 295*np.ones(len(data_failure_time_distribution_POSTE_DE_CONTROLE)), color='blue', marker = 'x', s = 15, label = 'Failure time')
-plt.scatter(data_failure_time_distribution_CONNECTEURS, 285*np.ones(len(data_failure_time_distribution_CONNECTEURS)), color='blue', marker = 'x', s = 15)
-plt.scatter(data_failure_time_distribution_POSTE_09, 275*np.ones(len(data_failure_time_distribution_POSTE_09)), color='blue', marker = 'x', s = 15)
-plt.scatter(data_failure_time_distribution_POSTE_04, 265*np.ones(len(data_failure_time_distribution_POSTE_04)), color='blue', marker = 'x', s = 15)
-plt.scatter(data_failure_time_distribution_CONVOYEURS, 255*np.ones(len(data_failure_time_distribution_CONVOYEURS)), color='blue', marker = 'x', s = 15)
-plt.scatter(data_failure_time_distribution_LIGNE_DE_MONTAGE_MOTG02, 245*np.ones(len(data_failure_time_distribution_LIGNE_DE_MONTAGE_MOTG02)), color='blue', marker = 'x', s = 15)
-plt.scatter(data_failure_time_distribution_POSTE_02, 235*np.ones(len(data_failure_time_distribution_POSTE_02)), color='blue', marker = 'x', s = 15)
-plt.scatter(data_failure_time_distribution_POSTE_15, 225*np.ones(len(data_failure_time_distribution_POSTE_15)), color='blue', marker = 'x', s = 15)
-plt.scatter(data_failure_time_distribution_MAGASIN, 215*np.ones(len(data_failure_time_distribution_MAGASIN)), color='blue', marker = 'x', s = 15)
-plt.scatter(data_failure_time_distribution_ASCENSEUR_DE_SORTIE, 205*np.ones(len(data_failure_time_distribution_ASCENSEUR_DE_SORTIE)), color='blue', marker = 'x', s = 15)
-plt.scatter(data_failure_time_distribution_MM, 195*np.ones(len(data_failure_time_distribution_MM)), color='blue', marker = 'x', s = 15)
-plt.scatter(data_failure_time_distribution_ASCENSEUR, 185*np.ones(len(data_failure_time_distribution_ASCENSEUR)), color='blue', marker = 'x', s = 15)
-plt.scatter(data_failure_time_distribution_KTM6, 175*np.ones(len(data_failure_time_distribution_KTM6)), color='blue', marker = 'x', s = 15)
-plt.scatter(data_failure_time_distribution_PINCE, 165*np.ones(len(data_failure_time_distribution_PINCE)), color='blue', marker = 'x', s = 15)
-plt.scatter(data_failure_time_distribution_POSTE_05, 155*np.ones(len(data_failure_time_distribution_POSTE_05)), color='blue', marker = 'x', s = 15)
-plt.scatter(data_failure_time_distribution_KTM5, 145*np.ones(len(data_failure_time_distribution_KTM5)), color='blue', marker = 'x', s = 15)
-plt.scatter(data_failure_time_distribution_EMMANCHEMENT, 135*np.ones(len(data_failure_time_distribution_EMMANCHEMENT)), color='blue', marker = 'x', s = 15)
-plt.scatter(data_failure_time_distribution_CHAUFFE_VENTILATEURS, 125*np.ones(len(data_failure_time_distribution_CHAUFFE_VENTILATEURS)), color='blue', marker = 'x', s = 15)
-plt.scatter(data_failure_time_distribution_ECRANS, 115*np.ones(len(data_failure_time_distribution_ECRANS)), color='blue', marker = 'x', s = 15)
-plt.scatter(data_failure_time_distribution_DIVERS, 105*np.ones(len(data_failure_time_distribution_DIVERS)), color='blue', marker = 'x', s = 15)
-plt.scatter(data_failure_time_distribution_EI7, 95*np.ones(len(data_failure_time_distribution_EI7)), color='blue', marker = 'x', s = 15)
-plt.scatter(data_failure_time_distribution_POSTE_06A, 85*np.ones(len(data_failure_time_distribution_POSTE_06A)), color='blue', marker = 'x', s = 15)
-plt.scatter(data_failure_time_distribution_TRANSLATION, 75*np.ones(len(data_failure_time_distribution_TRANSLATION)), color='blue', marker = 'x', s = 15)
-plt.scatter(data_failure_time_distribution_CONVOYEUR_COTE, 65*np.ones(len(data_failure_time_distribution_CONVOYEUR_COTE)), color='blue', marker = 'x', s = 15)
-plt.scatter(data_failure_time_distribution_ASCENSEUR_SORTIE, 55*np.ones(len(data_failure_time_distribution_ASCENSEUR_SORTIE)), color='blue', marker = 'x', s = 15)
-plt.scatter(data_failure_time_distribution_VISSEUSES, 45*np.ones(len(data_failure_time_distribution_VISSEUSES)), color='blue', marker = 'x', s = 15)
-plt.scatter(data_failure_time_distribution_POSTE_07, 35*np.ones(len(data_failure_time_distribution_POSTE_07)), color='blue', marker = 'x', s = 15)
-plt.scatter(data_failure_time_distribution_POSTE_14, 25*np.ones(len(data_failure_time_distribution_POSTE_14)), color='blue', marker = 'x', s = 15)
-
-
+# plt.scatter(data_failure_time_distribution_POSTE_DE_CONTROLE, 295*np.ones(len(data_failure_time_distribution_POSTE_DE_CONTROLE)), color='blue', marker = 'x', s = 15, label = 'Failure time')
+# plt.scatter(data_failure_time_distribution_CONNECTEURS, 285*np.ones(len(data_failure_time_distribution_CONNECTEURS)), color='blue', marker = 'x', s = 15)
+# plt.scatter(data_failure_time_distribution_POSTE_09, 275*np.ones(len(data_failure_time_distribution_POSTE_09)), color='blue', marker = 'x', s = 15)
+# plt.scatter(data_failure_time_distribution_POSTE_04, 265*np.ones(len(data_failure_time_distribution_POSTE_04)), color='blue', marker = 'x', s = 15)
+# plt.scatter(data_failure_time_distribution_CONVOYEURS, 255*np.ones(len(data_failure_time_distribution_CONVOYEURS)), color='blue', marker = 'x', s = 15)
+# plt.scatter(data_failure_time_distribution_LIGNE_DE_MONTAGE_MOTG02, 245*np.ones(len(data_failure_time_distribution_LIGNE_DE_MONTAGE_MOTG02)), color='blue', marker = 'x', s = 15)
+# plt.scatter(data_failure_time_distribution_POSTE_02, 235*np.ones(len(data_failure_time_distribution_POSTE_02)), color='blue', marker = 'x', s = 15)
+# plt.scatter(data_failure_time_distribution_POSTE_15, 225*np.ones(len(data_failure_time_distribution_POSTE_15)), color='blue', marker = 'x', s = 15)
+# plt.scatter(data_failure_time_distribution_MAGASIN, 215*np.ones(len(data_failure_time_distribution_MAGASIN)), color='blue', marker = 'x', s = 15)
+# plt.scatter(data_failure_time_distribution_ASCENSEUR_DE_SORTIE, 205*np.ones(len(data_failure_time_distribution_ASCENSEUR_DE_SORTIE)), color='blue', marker = 'x', s = 15)
+# plt.scatter(data_failure_time_distribution_MM, 195*np.ones(len(data_failure_time_distribution_MM)), color='blue', marker = 'x', s = 15)
+# plt.scatter(data_failure_time_distribution_ASCENSEUR, 185*np.ones(len(data_failure_time_distribution_ASCENSEUR)), color='blue', marker = 'x', s = 15)
+# plt.scatter(data_failure_time_distribution_KTM6, 175*np.ones(len(data_failure_time_distribution_KTM6)), color='blue', marker = 'x', s = 15)
+# plt.scatter(data_failure_time_distribution_PINCE, 165*np.ones(len(data_failure_time_distribution_PINCE)), color='blue', marker = 'x', s = 15)
+# plt.scatter(data_failure_time_distribution_POSTE_05, 155*np.ones(len(data_failure_time_distribution_POSTE_05)), color='blue', marker = 'x', s = 15)
+# plt.scatter(data_failure_time_distribution_KTM5, 145*np.ones(len(data_failure_time_distribution_KTM5)), color='blue', marker = 'x', s = 15)
+# plt.scatter(data_failure_time_distribution_EMMANCHEMENT, 135*np.ones(len(data_failure_time_distribution_EMMANCHEMENT)), color='blue', marker = 'x', s = 15)
+# plt.scatter(data_failure_time_distribution_CHAUFFE_VENTILATEURS, 125*np.ones(len(data_failure_time_distribution_CHAUFFE_VENTILATEURS)), color='blue', marker = 'x', s = 15)
+# plt.scatter(data_failure_time_distribution_ECRANS, 115*np.ones(len(data_failure_time_distribution_ECRANS)), color='blue', marker = 'x', s = 15)
+# plt.scatter(data_failure_time_distribution_DIVERS, 105*np.ones(len(data_failure_time_distribution_DIVERS)), color='blue', marker = 'x', s = 15)
+# plt.scatter(data_failure_time_distribution_EI7, 95*np.ones(len(data_failure_time_distribution_EI7)), color='blue', marker = 'x', s = 15)
+# plt.scatter(data_failure_time_distribution_POSTE_06A, 85*np.ones(len(data_failure_time_distribution_POSTE_06A)), color='blue', marker = 'x', s = 15)
+# plt.scatter(data_failure_time_distribution_TRANSLATION, 75*np.ones(len(data_failure_time_distribution_TRANSLATION)), color='blue', marker = 'x', s = 15)
+# plt.scatter(data_failure_time_distribution_CONVOYEUR_COTE, 65*np.ones(len(data_failure_time_distribution_CONVOYEUR_COTE)), color='blue', marker = 'x', s = 15)
+# plt.scatter(data_failure_time_distribution_ASCENSEUR_SORTIE, 55*np.ones(len(data_failure_time_distribution_ASCENSEUR_SORTIE)), color='blue', marker = 'x', s = 15)
+# plt.scatter(data_failure_time_distribution_VISSEUSES, 45*np.ones(len(data_failure_time_distribution_VISSEUSES)), color='blue', marker = 'x', s = 15)
+# plt.scatter(data_failure_time_distribution_POSTE_07, 35*np.ones(len(data_failure_time_distribution_POSTE_07)), color='blue', marker = 'x', s = 15)
+# plt.scatter(data_failure_time_distribution_POSTE_14, 25*np.ones(len(data_failure_time_distribution_POSTE_14)), color='blue', marker = 'x', s = 15)
 
 
 
 
-# plt.scatter(int(MTBF_POSTE_DE_CONTROLE.iloc[0])*np.array([i for i in range(1, int(5500/MTBF_POSTE_DE_CONTROLE.iloc[0]) + 1)]), 64*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_POSTE_DE_CONTROLE.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10, label = 'Estimated repair time')
-# plt.scatter(int(MTBF_CONNECTEURS.iloc[0])*np.array([i for i in range(1, int(5500/MTBF_CONNECTEURS.iloc[0]) + 1)]), 54*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_CONNECTEURS.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
-# plt.scatter(int(MTBF_POSTE_09.iloc[0])*np.array([i for i in range(1, int(5500/MTBF_POSTE_09.iloc[0]) + 1)]), 44*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_POSTE_09.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
-# plt.scatter(int(MTBF_POSTE_04.iloc[0])*np.array([i for i in range(1, int(5500/MTBF_POSTE_04.iloc[0]) + 1)]), 34*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_POSTE_04.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
-# plt.scatter(int(MTBF_CONVOYEURS.iloc[0])*np.array([i for i in range(1, int(5500/MTBF_CONVOYEURS.iloc[0]) + 1)]), 24*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_CONVOYEURS.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
-# plt.scatter(int(MTBF_LIGNE_DE_MONTAGE_MOTG02.iloc[0])*np.array([i for i in range(1, int(5500/MTBF_LIGNE_DE_MONTAGE_MOTG02.iloc[0]) + 1)]), 14*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_LIGNE_DE_MONTAGE_MOTG02.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
 
-plt.title('Distribution of failure on each component')
+
+plt.scatter(MTBF_POSTE_DE_CONTROLE.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_POSTE_DE_CONTROLE.iloc[0]) + 1)]), 295*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_POSTE_DE_CONTROLE.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10, label = 'Nominal preventive maintenance time (80% MTBF)')
+plt.scatter(MTBF_CONNECTEURS.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_CONNECTEURS.iloc[0]) + 1)]), 285*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_CONNECTEURS.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+plt.scatter(MTBF_POSTE_09.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_POSTE_09.iloc[0]) + 1)]), 275*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_POSTE_09.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+plt.scatter(MTBF_POSTE_04.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_POSTE_04.iloc[0]) + 1)]), 265*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_POSTE_04.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+plt.scatter(MTBF_CONVOYEURS.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_CONVOYEURS.iloc[0]) + 1)]), 255*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_CONVOYEURS.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+plt.scatter(MTBF_LIGNE_DE_MONTAGE_MOTG02.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_LIGNE_DE_MONTAGE_MOTG02.iloc[0]) + 1)]), 245*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_LIGNE_DE_MONTAGE_MOTG02.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+# plt.scatter(MTBF_POSTE_02.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_POSTE_02.iloc[0]) + 1)]), 234*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_POSTE_02.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+# plt.scatter(MTBF_POSTE_15.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_POSTE_15.iloc[0]) + 1)]), 224*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_POSTE_15.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+# plt.scatter(MTBF_MAGASIN.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_MAGASIN.iloc[0]) + 1)]), 214*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_MAGASIN.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+# plt.scatter(MTBF_ASCENSEUR_DE_SORTIE.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_ASCENSEUR_DE_SORTIE.iloc[0]) + 1)]), 204*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_ASCENSEUR_DE_SORTIE.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+# plt.scatter(MTBF_MM.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_MM.iloc[0]) + 1)]), 194*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_MM.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+# plt.scatter(MTBF_ASCENSEUR.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_ASCENSEUR.iloc[0]) + 1)]), 184*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_ASCENSEUR.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+# plt.scatter(MTBF_KTM6.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_KTM6.iloc[0]) + 1)]), 174*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_KTM6.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+# plt.scatter(MTBF_PINCE.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_PINCE.iloc[0]) + 1)]), 164*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_PINCE.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+# plt.scatter(MTBF_POSTE_05.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_POSTE_05.iloc[0]) + 1)]), 154*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_POSTE_05.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+# plt.scatter(MTBF_KTM5.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_KTM5.iloc[0]) + 1)]), 144*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_KTM5.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+# plt.scatter(MTBF_EMMANCHEMENT.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_EMMANCHEMENT.iloc[0]) + 1)]), 134*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_EMMANCHEMENT.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+# plt.scatter(MTBF_CHAUFFE_VENTILATEURS.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_CHAUFFE_VENTILATEURS.iloc[0]) + 1)]), 124*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_CHAUFFE_VENTILATEURS.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+# plt.scatter(MTBF_ECRANS.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_ECRANS.iloc[0]) + 1)]), 114*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_ECRANS.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+# plt.scatter(MTBF_DIVERS.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_DIVERS.iloc[0]) + 1)]), 104*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_DIVERS.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+# plt.scatter(MTBF_EI7.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_EI7.iloc[0]) + 1)]), 94*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_EI7.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+# plt.scatter(MTBF_POSTE_06A.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_POSTE_06A.iloc[0]) + 1)]), 84*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_POSTE_06A.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+# plt.scatter(MTBF_TRANSLATION.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_TRANSLATION.iloc[0]) + 1)]), 74*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_TRANSLATION.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+# plt.scatter(MTBF_CONVOYEUR_COTE.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_CONVOYEUR_COTE.iloc[0]) + 1)]), 64*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_CONVOYEUR_COTE.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+# plt.scatter(MTBF_ASCENSEUR_SORTIE.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_ASCENSEUR_SORTIE.iloc[0]) + 1)]), 54*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_ASCENSEUR_SORTIE.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+# plt.scatter(MTBF_VISSEUSES.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_VISSEUSES.iloc[0]) + 1)]), 44*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_VISSEUSES.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+# plt.scatter(MTBF_POSTE_07.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_POSTE_07.iloc[0]) + 1)]), 34*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_POSTE_07.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+# plt.scatter(MTBF_POSTE_14.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_POSTE_14.iloc[0]) + 1)]), 24*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_POSTE_14.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
+
+
+
+
+# x1 = [174.786,174.786 , 346.596, 519.895, 693.193, 866.491, 359.09, 543.054, 543.054, 718.179, 897.724, 208.829, 417.658, 626.777,626.777 , 835.316, 732.33]
+# x2 = [174.786, 174.786, 349.571,349.571, 519.895, 693.193, 866.491, 543.054,543.054, 724.612,724.612, 897.724, 208.829, 417.658, 626.777,626.777, 835.316]
+
+# y1 = [295, 285, 295, 295, 295, 295, 285, 285, 265, 285, 285, 275, 275, 275, 255, 275, 245]
+# y2 = [295, 285, 295, 285, 295, 295, 295, 285,265, 285,245, 285, 275, 275, 275, 255, 275]
+
+# plt.scatter(x2, y2, color='green', marker = '|', s = 70, label = 'Optimal execution time')
+
+
+
+
+# plt.title('Distribution of failure on each component (1000h)')
 ax.grid(True, linestyle=':')                                       # Make grid lines visible
 plt.legend(loc='upper right')
 plt.show()
-
-"""

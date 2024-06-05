@@ -50,7 +50,7 @@ GENERATIONS = 1500
 C_s = 500
 C_d = 100
 
-m = 3                                                                   # Number of repairmen
+m = 2                                                                   # Number of repairmen
 w_max = 7                                                               # Maximum number of iterations for binary search
 
 # initialize genome
@@ -274,6 +274,7 @@ def cost_benefit(B_S, B_U, P):
 # # Test main
 # genome = random_genome(GENOME_LENGTH)
 genome = [13, 15, 17, 9, 8, 13, 15, 14, 12, 2, 6, 4, 5, 3, 14, 5, 12]    #1496.6997279200023
+# genome = [17, 16, 15, 14, 12, 17, 10, 4, 8, 7, 6, 5, 13, 3, 4, 13, 2]
 N, G_activity = decode(genome)
 print(f"Genome: {genome}")
 print(f"Activities in each group: {G_activity}")
@@ -307,3 +308,45 @@ a = fitness(EB)
 print(a)
 
 
+
+"""
+# Create a DataFrame based on the provided data
+data2 = {
+    "Cost saving": [1085.145, 1496.7, 1496.7, 1496.7, 1496.7, 1496.7, 1496.7],
+    "Number of repairmen": [1, 2, 3, 4, 5, 6, 7]
+}
+
+df3 = pd.DataFrame(data2)
+
+# Plotting the line chart
+plt.figure(figsize=(10, 6))
+plt.plot(df3["Number of repairmen"], df3["Cost saving"], marker='o', linestyle='--', color='b')
+plt.xlabel('Number of repairmen')
+plt.ylabel('Cost saving [euros]')
+plt.xticks(df3["Number of repairmen"])
+plt.show()
+"""
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Create a DataFrame based on the provided data
+data2 = {
+    "Number of repairmen": [1, 2, 3, 4, 5, 6, 7],
+    "Unavailability period [hours]": [30.996, 25.473, 25.473, 25.473, 25.473, 25.473, 25.473]
+}
+
+df2 = pd.DataFrame(data2)
+
+# Plotting the line chart
+plt.figure(figsize=(10, 6))
+plt.plot(df2["Number of repairmen"], df2["Unavailability period [hours]"], marker='o', linestyle='-', color='b')
+plt.xlabel('Number of repairmen')
+plt.ylabel('Unavailability period [hours]')
+plt.xticks(df2["Number of repairmen"])
+
+# Annotating each data point
+for i, txt in enumerate(df2["Unavailability period [hours]"]):
+    plt.annotate(f'{txt}', (df2["Number of repairmen"][i], df2["Unavailability period [hours]"][i]), textcoords="offset points", xytext=(0,10), ha='center')
+
+plt.show()

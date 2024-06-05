@@ -350,8 +350,8 @@ fig, ax = plt.subplots()
 # ax.broken_barh(data_POSTE_04, (33, 4), facecolors='blue')
 # ax.broken_barh(data_CONVOYEURS, (23, 4), facecolors='blue')
 # ax.broken_barh(data_LIGNE_DE_MONTAGE_MOTG02, (13, 4), facecolors='blue')
-ax.set_xlim(-10, 1000)
-ax.set_ylim(7, 320)
+ax.set_xlim(-10, 5500)
+ax.set_ylim(7, 340)
 ax.set_xlabel('Time')
 ax.set_ylabel('Component')
 ax.set_yticks([295, 285, 275, 265, 255, 245, 235, 225, 215, 205, 195, 185, 175, 165, 155, 145, 135, 125, 115, 105, 95, 85, 75, 65, 55, 45, 35, 25], labels=['POSTE DE CONTRÔLE', 'CONNECTEURS', 'POSTE 09 : MONTAGE CÔTÉ A (RETOURNEMENTS)', 'POSTE 04  : EMMANCHEMENTS ROULEMENTS (PRESSE)', 'CONVOYEURS', 'LIGNE DE MONTAGE MOTG02', 'POSTE 02 : ENTRÉE PLATEAUX PLEIN', 'POSTE 15 : CONTRÔLE HAUTE TENSION', 'MAGASIN PLATEAUX VIDES', 'ASCENSEUR DE SORTIE', 'MM-TAILLE1', 'ASCENSEUR', 'KTM6', 'PINCE', 'POSTE 05 : MONTAGE ENTRAINEURS', 'KTM5', 'EMMANCHEMENT', 'CHAUFFE VENTILATEURS', 'ECRANS', 'DIVERS', 'EI7-BARRETTE', 'POSTE 06A : MONTAGE FREINS + SERRAGE TIRANTS', 'TRANSLATION', 'CONVOYEUR CÔTÉ CONTRÔLE', 'ASCENSEUR SORTIE', 'VISSEUSES ÉLECTRIQUE', 'POSTE 07 : MONTAGE CAPOT + SOUPAPES', 'POSTE 14 : CONTRÔLE MISE Á LA TERRE'])     # Modify y-axis tick labels
@@ -390,7 +390,7 @@ plt.scatter(data_failure_time_distribution_POSTE_14, 25*np.ones(len(data_failure
 
 
 
-plt.scatter(MTBF_POSTE_DE_CONTROLE.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_POSTE_DE_CONTROLE.iloc[0]) + 1)]), 294*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_POSTE_DE_CONTROLE.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10, label = 'Estimated failure time (80% MTBF)')
+plt.scatter(MTBF_POSTE_DE_CONTROLE.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_POSTE_DE_CONTROLE.iloc[0]) + 1)]), 294*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_POSTE_DE_CONTROLE.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10, label = 'Nominal preventive maintenance time (80% MTBF)')
 plt.scatter(MTBF_CONNECTEURS.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_CONNECTEURS.iloc[0]) + 1)]), 284*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_CONNECTEURS.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
 plt.scatter(MTBF_POSTE_09.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_POSTE_09.iloc[0]) + 1)]), 274*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_POSTE_09.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
 plt.scatter(MTBF_POSTE_04.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_POSTE_04.iloc[0]) + 1)]), 264*np.ones(len(np.array([i for i in range(1, int(5500/MTBF_POSTE_04.iloc[0]) + 1)]))), color='brown', marker = 'o', s = 10)
