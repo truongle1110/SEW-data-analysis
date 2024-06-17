@@ -50,7 +50,7 @@ GENERATIONS = 1500
 C_s = 500
 C_d = 100
 
-m = 2                                                                   # Number of repairmen
+m = 1                                                                   # Number of repairmen
 w_max = 7                                                               # Maximum number of iterations for binary search
 
 # initialize genome
@@ -273,8 +273,8 @@ def cost_benefit(B_S, B_U, P):
 
 # # Test main
 # genome = random_genome(GENOME_LENGTH)
-genome = [13, 15, 17, 9, 8, 13, 15, 14, 12, 2, 6, 4, 5, 3, 14, 5, 12]    #1496.6997279200023
-# genome = [17, 16, 15, 14, 12, 17, 10, 4, 8, 7, 6, 5, 13, 3, 4, 13, 2]
+# genome = [13, 15, 17, 9, 8, 13, 15, 14, 12, 2, 6, 4, 5, 3, 14, 5, 12]    #1496.6997279200023
+genome = [17, 16, 15, 14, 12, 17, 10, 4, 8, 7, 6, 5, 13, 3, 4, 13, 2] 
 N, G_activity = decode(genome)
 print(f"Genome: {genome}")
 print(f"Activities in each group: {G_activity}")
