@@ -421,7 +421,7 @@ plt.scatter(MTBF_POSTE_14.iloc[0]*np.array([i for i in range(1, int(5500/MTBF_PO
 
 
 
-plt.title('Distribution of failure on each component (1000h)')
+plt.title('Distribution of failure on each component')
 ax.grid(True, linestyle=':')                                       # Make grid lines visible
 plt.legend(loc='upper right')
 plt.show()
