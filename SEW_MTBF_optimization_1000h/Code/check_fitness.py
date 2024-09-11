@@ -47,10 +47,10 @@ MUTATION_RATE = 0.01
 CROSSOVER_RATE = 0.7
 GENERATIONS = 1500
 
-C_s = 500
+C_s = 2000
 C_d = 100
 
-m = 1                                                                   # Number of repairmen
+m = 4                                                                   # Number of repairmen
 w_max = 7                                                               # Maximum number of iterations for binary search
 
 # initialize genome
@@ -274,7 +274,7 @@ def cost_benefit(B_S, B_U, P):
 # # Test main
 # genome = random_genome(GENOME_LENGTH)
 # genome = [13, 15, 17, 9, 8, 13, 15, 14, 12, 2, 6, 4, 5, 3, 14, 5, 12]    #1496.6997279200023
-genome = [17, 16, 15, 14, 12, 17, 10, 4, 8, 7, 6, 5, 13, 3, 4, 13, 2] 
+genome = [8, 12, 5, 9, 11, 8, 12, 5, 15, 11, 8, 6, 10, 2, 5, 10, 15]
 N, G_activity = decode(genome)
 print(f"Genome: {genome}")
 print(f"Activities in each group: {G_activity}")
@@ -327,6 +327,7 @@ plt.xticks(df3["Number of repairmen"])
 plt.show()
 """
 
+"""
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -350,3 +351,4 @@ for i, txt in enumerate(df2["Unavailability period [hours]"]):
     plt.annotate(f'{txt}', (df2["Number of repairmen"][i], df2["Unavailability period [hours]"][i]), textcoords="offset points", xytext=(0,10), ha='center')
 
 plt.show()
+"""
