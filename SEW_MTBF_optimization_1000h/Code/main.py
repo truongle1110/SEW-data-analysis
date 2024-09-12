@@ -52,7 +52,7 @@ p_m_max = 0.1
 C_s = 5000
 C_d = 50
 
-m = 2                                                                   # Number of repairmen
+m = 3                                                                   # Number of repairmen
 w_max = 7                                                               # Maximum number of iterations for binary search
 
 # initialize genome

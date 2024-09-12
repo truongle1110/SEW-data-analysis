@@ -219,6 +219,7 @@ def unavailability_cost_saving(G_activity, C_d, m, w_max):
     # print(f"Total durations in group: {G_total_duration}")
     d_Gk = calculate_d_Gk(G_duration, m, w_max)
     print(d_Gk)
+    print("Unavailability period: ", sum(d_Gk))
     B_U = (np.array(G_total_duration) - np.array(d_Gk)) * C_d
     return B_U
 
@@ -274,7 +275,7 @@ def cost_benefit(B_S, B_U, P):
 # # Test main
 # genome = random_genome(GENOME_LENGTH)
 # genome = [13, 15, 17, 9, 8, 13, 15, 14, 12, 2, 6, 4, 5, 3, 14, 5, 12]    #1496.6997279200023
-genome = [3, 15, 6, 14, 9, 3, 15, 6, 11, 9, 3, 12, 8, 7, 6, 8, 11]
+genome = [8, 16, 1, 7, 6, 8, 16, 1, 14, 6, 8, 4, 9, 3, 1, 9, 14]
 N, G_activity = decode(genome)
 print(f"Genome: {genome}")
 print(f"Activities in each group: {G_activity}")
