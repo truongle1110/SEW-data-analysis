@@ -34,21 +34,17 @@ component2 = Component(40)
 component3 = Component(30)
 component4 = Component(60)
 component5 = Component(70)
-component6 = Component(50)
-component7 = Component(40)
-component8 = Component(30)
-component9 = Component(60)
-component10 = Component(70)
 
 # Define series and parallel structures
-series_12 = SeriesStructure([component1, component2])
-parallel_1234 = ParallelStructure([series_12, component3, component4])
-parallel_67 = ParallelStructure([component6, component7])
-series_567 = SeriesStructure([component5, parallel_67])
-parallel_5678 = ParallelStructure([series_567, component8])
+# Example: A series structure made up of components 1 and 2
+series1 = SeriesStructure([component1, component2])
+
+# Example: A parallel structure made up of components 3, 4, and 5
+parallel1 = ParallelStructure([component3, component4, component5])
 
 # Define the overall series-parallel system
-system = SeriesParallelSystem([parallel_1234])
+# For example, combining series1 and parallel1 in series
+system = SeriesParallelSystem([series1, parallel1])
 
 # Calculate the maximum capacity of the system
 max_capacity = system.max_capacity()
