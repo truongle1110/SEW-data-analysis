@@ -42,7 +42,7 @@ component10 = Component(70)
 
 # Define series and parallel structures
 series_12 = SeriesStructure([component1, component2])
-parallel_1234 = ParallelStructure([series_12, component4, component5])
+parallel_1234 = ParallelStructure([series_12, component3, component4])
 parallel_67 = ParallelStructure([component6, component7])
 series_567 = SeriesStructure([component5, parallel_67])
 parallel_5678 = ParallelStructure([series_567, component8])
