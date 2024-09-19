@@ -310,10 +310,10 @@ print(a)
 
 
 
-"""
+
 # Create a DataFrame based on the provided data
 data2 = {
-    "Cost saving": [1085.145, 1496.7, 1496.7, 1496.7, 1496.7, 1496.7, 1496.7],
+    "Cost saving": [26638.497, 27061.693, 27061.693, 27061.693, 27061.693, 27061.693, 27061.693],
     "Number of repairmen": [1, 2, 3, 4, 5, 6, 7]
 }
 
@@ -326,30 +326,28 @@ plt.xlabel('Number of repairmen')
 plt.ylabel('Cost saving [euros]')
 plt.xticks(df3["Number of repairmen"])
 plt.show()
-"""
 
-"""
+
+
 import pandas as pd
 import matplotlib.pyplot as plt
 
+"""
 # Create a DataFrame based on the provided data
 data2 = {
     "Number of repairmen": [1, 2, 3, 4, 5, 6, 7],
-    "Unavailability period [hours]": [30.996, 25.473, 25.473, 25.473, 25.473, 25.473, 25.473]
+    "Unavailability period [hours]": [30.996, 22.532, 22.532, 22.532, 22.532, 22.532, 22.532]
 }
 
 df2 = pd.DataFrame(data2)
 
 # Plotting the line chart
 plt.figure(figsize=(10, 6))
-plt.plot(df2["Number of repairmen"], df2["Unavailability period [hours]"], marker='o', linestyle='-', color='b')
+plt.plot(df2["Number of repairmen"], df2["Unavailability period [hours]"], marker='o', linestyle='--', color='b')
 plt.xlabel('Number of repairmen')
 plt.ylabel('Unavailability period [hours]')
 plt.xticks(df2["Number of repairmen"])
 
-# Annotating each data point
-for i, txt in enumerate(df2["Unavailability period [hours]"]):
-    plt.annotate(f'{txt}', (df2["Number of repairmen"][i], df2["Unavailability period [hours]"][i]), textcoords="offset points", xytext=(0,10), ha='center')
 
 plt.show()
 """
