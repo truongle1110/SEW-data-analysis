@@ -86,7 +86,6 @@ complex_system.determine_system_criticality()
 # List critical components
 critical_components = complex_system.list_critical_components()
 
-print(complex_system)
 # Display the critical components
 print("Critical components in the system:")
 for component in critical_components:

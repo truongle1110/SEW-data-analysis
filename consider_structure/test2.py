@@ -13,13 +13,13 @@ class SeriesStructure:
     def __init__(self, components):
         """
         Initialize a series structure with components.
-        :param components: List of Component objects.
+        :param components: List of Component or Structure objects.
         """
         self.components = components
     
     def determine_criticality(self):
         """
-        In a series structure, all components are critical.
+        In a series structure, all components are critical, unless nested in a parallel structure.
         """
         for component in self.components:
             component.is_critical = True
@@ -29,13 +29,13 @@ class SeriesStructure:
         In a series structure, the maximum capacity is limited by the component with the smallest capacity.
         :return: Maximum capacity of the series structure.
         """
-        return min(component.capacity for component in self.components)
+        return min(component.max_capacity() if isinstance(component, (SeriesStructure, ParallelStructure)) else component.capacity for component in self.components)
 
 class ParallelStructure:
     def __init__(self, components):
         """
         Initialize a parallel structure with components.
-        :param components: List of Component objects.
+        :param components: List of Component or Structure objects.
         """
         self.components = components
     
@@ -54,7 +54,7 @@ class ParallelStructure:
         In a parallel structure, the maximum capacity is the sum of the capacities of all components.
         :return: Maximum capacity of the parallel structure.
         """
-        return sum(component.capacity for component in self.components)
+        return sum(component.max_capacity() if isinstance(component, (SeriesStructure, ParallelStructure)) else component.capacity for component in self.components)
 
 class ComplexSystem:
     def __init__(self, structures):
@@ -120,11 +120,11 @@ complex_system.determine_system_criticality()
 critical_components = complex_system.list_critical_components()
 
 # Find the maximum capacity of the system
-# max_capacity = complex_system.max_capacity()
+max_capacity = complex_system.max_capacity()
 
 # Display results
 print("Critical components in the system:")
 for component in critical_components:
     print(component)
 
-# print(f"\nThe maximum capacity of the system is: {max_capacity}")
+print(f"\nThe maximum capacity of the system is: {max_capacity}")
