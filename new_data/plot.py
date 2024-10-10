@@ -19,10 +19,11 @@ from scipy.stats import norm
 
 # Load the Excel file
 file_path = 'Failure distribution.xlsx'  # replace with your actual file path
-data = pd.read_excel(file_path)
-
+all_sheets = pd.read_excel(file_path, sheet_name=None)
+data = all_sheets['LIGNE DE MONTAGE MOTG02']
+# print(data)
 # Filter the rows where Column C has the specific value
-filtered_data = data[data['Libellé parc'] == 'CONVOYEURS']
+filtered_data = data[data['Libellé parc'] == 'POSTE 04  : EMMANCHEMENTS ROULEMENTS (PRESSE)']
 
 # Extract the corresponding values from Column E
 failure_time_point = filtered_data['Failure time point']
@@ -41,6 +42,6 @@ xmin, xmax = plt.xlim()
 x = np.linspace(xmin, xmax, 100)
 p = norm.pdf(x, mu, std)
 plt.plot(x, p, 'k', linewidth=2)
-plt.title('CONVOYEURS histogram')
+plt.title('POSTE 04  : EMMANCHEMENTS ROULEMENTS (PRESSE) histogram')
 plt.show()
 
