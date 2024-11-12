@@ -7,7 +7,6 @@ import plotly.express as px
 
 # Load the Excel file
 file_path = 'Failure distribution plots.xlsx'
-df = pd.read_excel(file_path)
 all_sheets = pd.read_excel(file_path, sheet_name=None)
 sheet = ["ASCENSEUR SORTIE", "ASCENSEUR (in POSTE4)", "Ascenseur (in POSTE2)", "POSTE 15   CONTRÔLE HAUTE TENSI"]
 for i in sheet:
