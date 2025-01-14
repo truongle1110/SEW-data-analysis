@@ -54,7 +54,7 @@ class ParallelStructure:
         In a parallel structure, the maximum capacity is the sum of the capacities of all components.
         :return: Maximum capacity of the parallel structure.
         """
-        return sum(component.max_capacity() if isinstance(component, (SeriesStructure, ParallelStructure)) else component.capacity for component in self.components)
+        return min(component.max_capacity() if isinstance(component, (SeriesStructure, ParallelStructure)) else component.capacity for component in self.components)
 
 class ComplexSystem:
     def __init__(self, structures):
