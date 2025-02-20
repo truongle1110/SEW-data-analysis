@@ -45,12 +45,12 @@ GENOME_LENGTH = 17                                                      # number
 POPULATION_SIZE = 100
 MUTATION_RATE = 0.01
 CROSSOVER_RATE = 0.7
-GENERATIONS = 1500
+GENERATIONS = 500
 
 C_s = 5000
 C_d = 50
 
-m = 2                                                                   # Number of repairmen
+m = 1                                                                   # Number of repairmen
 w_max = 7                                                               # Maximum number of iterations for binary search
 
 # initialize genome
@@ -309,7 +309,7 @@ a = fitness(EB)
 print(a)
 
 
-
+"""
 
 # Create a DataFrame based on the provided data
 data2 = {
@@ -332,7 +332,7 @@ plt.show()
 import pandas as pd
 import matplotlib.pyplot as plt
 
-"""
+
 # Create a DataFrame based on the provided data
 data2 = {
     "Number of repairmen": [1, 2, 3, 4, 5, 6, 7],

@@ -43,7 +43,7 @@ map_activity_to_replacement_time = list(zip(ID_activity, t))            # list o
 
 GENOME_LENGTH = 17                                                      # number of possible group
 POPULATION_SIZE = 60
-GENERATIONS = 1500
+GENERATIONS = 500
 p_c_min = 0.6
 p_c_max = 0.9
 p_m_min = 0.01
@@ -52,7 +52,7 @@ p_m_max = 0.1
 C_s = 5000
 C_d = 50
 
-m = 3                                                                   # Number of repairmen
+m = 1                                                                   # Number of repairmen
 w_max = 7                                                               # Maximum number of iterations for binary search
 
 # initialize genome
