@@ -43,16 +43,16 @@ map_activity_to_replacement_time = list(zip(ID_activity, t))            # list o
 
 GENOME_LENGTH = 17                                                      # number of possible group
 POPULATION_SIZE = 60
-GENERATIONS = 1500
+GENERATIONS = 100
 p_c_min = 0.6
 p_c_max = 0.9
 p_m_min = 0.01
 p_m_max = 0.1
 
-C_s = 5000
-C_d = 50
+C_s = 500
+C_d = 100
 
-m = 3                                                                   # Number of repairmen
+m = 1                                                                   # Number of repairmen
 w_max = 7                                                               # Maximum number of iterations for binary search
 
 # initialize genome
@@ -338,7 +338,7 @@ def mutate(genome, p_m):
         genome[i], genome[j] = genome[j], genome[i]
     return genome
 
-def genetic_algorithm(genome_length, m, population_size, generations, p_c_min, p_c_max, p_m_min, p_m_max):
+def genetic_algorithm(genome_length, m, population_size, generations, p_c_min, p_c_max, p_m_min, p_m_max, C_s, C_d):
     population = init_population(population_size, genome_length)
     best_solution = None
     best_fitness_value = -float('inf')
@@ -383,5 +383,5 @@ def genetic_algorithm(genome_length, m, population_size, generations, p_c_min, p
 
     return best_solution, best_fitness_value
 
-best_individual, best_fitness = genetic_algorithm(GENOME_LENGTH, m, POPULATION_SIZE, GENERATIONS, p_c_min, p_c_max, p_m_min, p_m_max)
+best_individual, best_fitness = genetic_algorithm(GENOME_LENGTH, m, POPULATION_SIZE, GENERATIONS, p_c_min, p_c_max, p_m_min, p_m_max, C_s, C_d)
 print(f"The best individual is: {best_individual} with fitness: {best_fitness}")
