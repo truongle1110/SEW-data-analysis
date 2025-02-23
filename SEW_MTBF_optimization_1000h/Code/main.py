@@ -43,7 +43,11 @@ map_activity_to_replacement_time = list(zip(ID_activity, t))            # list o
 
 GENOME_LENGTH = 17                                                      # number of possible group
 POPULATION_SIZE = 60
+<<<<<<< HEAD
 GENERATIONS = 100
+=======
+GENERATIONS = 500
+>>>>>>> 772fbad4d8a3af9ad8d0c47875956354609d767f
 p_c_min = 0.6
 p_c_max = 0.9
 p_m_min = 0.01
