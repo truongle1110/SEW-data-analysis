@@ -1,5 +1,6 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QMessageBox
+import json
+from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QMessageBox, QTextEdit
 from PyQt6.QtCore import Qt, QThread, pyqtSignal
 from main import genetic_algorithm, GENOME_LENGTH, POPULATION_SIZE, GENERATIONS, p_c_min, p_c_max, p_m_min, p_m_max
 from main import calculate_info
@@ -31,7 +32,7 @@ class GeneticAlgorithmGUI(QWidget):
 
     def initUI(self):
         self.setWindowTitle("GUI")
-        self.setGeometry(500, 500, 500, 300)
+        self.setGeometry(100, 100, 400, 300)
 
         layout = QVBoxLayout()
 
@@ -60,6 +61,14 @@ class GeneticAlgorithmGUI(QWidget):
         self.result_label = QLabel("", alignment=Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.result_label)
 
+        self.maintenance_plan_box = QTextEdit()
+
+        self.maintenance_plan_box.setReadOnly(True)
+
+        self.maintenance_plan_box.setFixedHeight(500)
+
+        layout.addWidget(self.maintenance_plan_box)
+
         self.setLayout(layout)
 
     def run_genetic_algorithm(self):
@@ -78,9 +87,9 @@ class GeneticAlgorithmGUI(QWidget):
 
     def display_result(self, best_individual, best_fitness, maintenance_plan):
         self.loading_label.setText("")
-        self.result_label.setText(f"Best Individual: {best_individual}\n"
-                                f"Best Fitness: {best_fitness}\n"
-                                f"Maintenance plan: {maintenance_plan}")
+        self.result_label.setText(f"Best Individual: {best_individual}\nBest Fitness: {best_fitness}")
+        formatted_info = json.dumps(maintenance_plan, indent=10, ensure_ascii=False)
+        self.maintenance_plan_box.setText(formatted_info)
 
     def display_error(self, error_message):
         self.loading_label.setText("")

@@ -463,19 +463,34 @@ def rename_dict_keys_with_excel(component_dict, excel_file_path):
 
     return component_dict_renamed
 
+def mapping_to_UI(genome):
+    N, G_activity = decode(genome)
+    G_component = mapping_activity_to_componentID(map_activity_to_IDcomponent, G_activity)
+    G_duration, _ = mapping_IDcomponent_to_duration(G_component)
+    replacement_time = mapping_activity_to_replacement_time(map_activity_to_replacement_time, G_activity)
+    return G_duration, G_component, replacement_time
 
 
-component_dict = build_component_dict(
+def calculate_info(genome):
+    G_duration, G_component, replacement_time = mapping_to_UI(genome)
+    print("G_duration: ", G_duration)
+    print("G_component: ", G_component)
+    print("replacement_time: ", replacement_time)
+    component_dict = build_component_dict(
         G_duration, G_component, replacement_time
     )
+    renamed_dict = rename_dict_keys_with_excel(component_dict, file_path_1)
+    return renamed_dict
 
-#  # Example: print the data for component 0
-# print("Component 0:", component_dict[1])
-print(component_dict)
+# # Example: print the data for component 0
+# # print("Component 0:", component_dict[1])
+# print(component_dict)
 
-renamed_dict = rename_dict_keys_with_excel(component_dict, file_path_1)
+# renamed_dict = rename_dict_keys_with_excel(component_dict, file_path_1)
 
-    # Now the dictionary keys match the "Component" names from the spreadsheet
-print(renamed_dict)
+# # Now the dictionary keys match the "Component" names from the spreadsheet
+# print(renamed_dict)
 
-plot_replacement_times(renamed_dict)
+# plot_replacement_times(renamed_dict)
+
+mnn = calculate_info(genome)

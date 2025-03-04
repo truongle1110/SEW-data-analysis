@@ -285,7 +285,6 @@ def mapping_to_UI(genome):
     return G_duration, G_component, replacement_time
 
 
-
 # ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
 # # # ## ## ## ## ## ## ## ## ## ## ## # Test main # ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
 
@@ -425,19 +424,7 @@ def build_component_dict(durations_in_group, components_in_each_group, replaceme
     return dict(component_dict)
 
 def plot_replacement_times(component_dict):
-    """
-    Create a scatter plot where each component is on the y-axis and
-    its replacement times are plotted along the x-axis.
     
-    component_dict: dict with structure:
-        {
-          component_id: {
-            'duration': [...],
-            'replacement_time': [...]
-          },
-          ...
-        }
-    """
     # Create the figure and axis
     fig, ax = plt.subplots()
 
@@ -484,3 +471,14 @@ def rename_dict_keys_with_excel(component_dict, excel_file_path):
         component_dict_renamed[comp_name] = comp_data
 
     return component_dict_renamed
+
+def calculate_info(genome):
+    G_duration, G_component, replacement_time = mapping_to_UI(genome)
+    # print("G_duration: ", G_duration)
+    # print("G_component: ", G_component)
+    # print("replacement_time: ", replacement_time)
+    component_dict = build_component_dict(
+        G_duration, G_component, replacement_time
+    )
+    renamed_dict = rename_dict_keys_with_excel(component_dict, file_path_1)
+    return renamed_dict
