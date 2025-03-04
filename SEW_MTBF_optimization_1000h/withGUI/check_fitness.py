@@ -164,6 +164,17 @@ def mapping_IDcomponent_to_beta(G_component):
         group_to_beta.append((group, beta))
     return group_to_beta
 
+# mapping group of component to group of alpha using output from mapping_activity_to_componentID()
+def mapping_IDcomponent_to_name(G_component):
+    group_to_name = []
+    for group, id_component in G_component:
+        name = []
+        for d in id_component:
+            value = df1.loc[df1['ID'] == d, 'Component'].iloc[0]
+            name.append(value)
+        group_to_name.append((group, name))
+    return group_to_name
+
 
 # First Fit Decreasing (FFD) method
 def first_fit_decreasing(durations, m, D):

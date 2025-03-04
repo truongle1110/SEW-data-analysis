@@ -43,7 +43,7 @@ map_activity_to_replacement_time = list(zip(ID_activity, t))            # list o
 
 GENOME_LENGTH = 17                                                      # number of possible group
 POPULATION_SIZE = 60
-GENERATIONS = 100
+GENERATIONS = 5
 p_c_min = 0.6
 p_c_max = 0.9
 p_m_min = 0.01
@@ -383,5 +383,5 @@ def genetic_algorithm(genome_length, m, population_size, generations, p_c_min, p
 
     return best_solution, best_fitness_value
 
-# best_individual, best_fitness = genetic_algorithm(GENOME_LENGTH, m, POPULATION_SIZE, GENERATIONS, p_c_min, p_c_max, p_m_min, p_m_max, C_s, C_d)
-# print(f"The best individual is: {best_individual} with fitness: {best_fitness}")
+best_individual, best_fitness = genetic_algorithm(GENOME_LENGTH, m, POPULATION_SIZE, GENERATIONS, p_c_min, p_c_max, p_m_min, p_m_max, C_s, C_d)
+print(f"The best individual is: {best_individual} with fitness: {best_fitness}")
