@@ -26,8 +26,8 @@ class GeneticAlgorithmGUI(QWidget):
         self.initUI()
 
     def initUI(self):
-        self.setWindowTitle("Genetic Algorithm GUI")
-        self.setGeometry(100, 100, 400, 300)
+        self.setWindowTitle("GUI")
+        self.setGeometry(500, 500, 500, 300)
 
         layout = QVBoxLayout()
 

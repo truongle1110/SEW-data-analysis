@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize
+from collections import defaultdict
 
 """
     Nc -- number of component
@@ -276,6 +277,14 @@ def fitness_function(genome, C_s, C_d):
     fitness_value = np.sum(EB)
     return fitness_value
 
+def mapping_to_UI(genome):
+    N, G_activity = decode(genome)
+    G_component = mapping_activity_to_componentID(map_activity_to_IDcomponent, G_activity)
+    G_duration, _ = mapping_IDcomponent_to_duration(G_component)
+    replacement_time = mapping_activity_to_replacement_time(map_activity_to_replacement_time, G_activity)
+    return G_duration, G_component, replacement_time
+
+
 
 # ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
 # # # ## ## ## ## ## ## ## ## ## ## ## # Test main # ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
@@ -383,5 +392,95 @@ def genetic_algorithm(genome_length, m, population_size, generations, p_c_min, p
 
     return best_solution, best_fitness_value
 
-best_individual, best_fitness = genetic_algorithm(GENOME_LENGTH, m, POPULATION_SIZE, GENERATIONS, p_c_min, p_c_max, p_m_min, p_m_max, C_s, C_d)
-print(f"The best individual is: {best_individual} with fitness: {best_fitness}")
+# best_individual, best_fitness = genetic_algorithm(GENOME_LENGTH, m, POPULATION_SIZE, GENERATIONS, p_c_min, p_c_max, p_m_min, p_m_max, C_s, C_d)
+# print(f"The best individual is: {best_individual} with fitness: {best_fitness}")
+
+# G_duration, G_component, replacement_time = mapping_to_UI(best_individual)
+# print(G_duration)
+
+def build_component_dict(durations_in_group, components_in_each_group, replacement_time_in_group):
+    """
+    Build a dictionary keyed by component, where each component's value is a dict
+    with two lists: 'duration' and 'replacement_time'.
+    """
+    
+    # Convert the "durations in group" and "replacement time in group" tuples
+    # into dictionaries keyed by group for easy lookup
+    durations_dict = dict(durations_in_group)
+    replacements_dict = dict(replacement_time_in_group)
+    
+    # Create a dictionary keyed by component
+    # Each component will have a list of durations and replacement times
+    component_dict = defaultdict(lambda: {"duration": [], "replacement_time": []})
+    
+    # Populate component_dict
+    for group, comp_list in components_in_each_group:
+        group_durations = durations_dict[group]
+        group_replacements = replacements_dict[group]
+        
+        for i, comp in enumerate(comp_list):
+            component_dict[comp]["duration"].append(group_durations[i])
+            component_dict[comp]["replacement_time"].append(group_replacements[i])
+    
+    return dict(component_dict)
+
+def plot_replacement_times(component_dict):
+    """
+    Create a scatter plot where each component is on the y-axis and
+    its replacement times are plotted along the x-axis.
+    
+    component_dict: dict with structure:
+        {
+          component_id: {
+            'duration': [...],
+            'replacement_time': [...]
+          },
+          ...
+        }
+    """
+    # Create the figure and axis
+    fig, ax = plt.subplots()
+
+    # For each component, plot its replacement times on the x-axis
+    # and the component ID (or name) on the y-axis.
+    for comp_id, data in component_dict.items():
+        replacements = data["replacement_time"]
+        
+        # We'll have one or more x-values (the replacements) and a matching list of y-values (comp_id repeated)
+        y_values = [comp_id] * len(replacements)
+        
+        # Scatter plot for this component
+        ax.scatter(replacements, y_values)
+    
+    # Label axes
+    ax.set_xlabel("Time")
+    ax.set_ylabel("Component")
+
+    # Optional: adjust the y-ticks to show each component distinctly (especially if comp_id are integers)
+    # If you prefer integer ticks only:
+    plt.yticks(sorted(component_dict.keys()))
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+    plt.title("Component Replacement Times")
+    plt.show()
+
+def rename_dict_keys_with_excel(component_dict, excel_file_path):
+    """
+    Read an Excel file with columns 'ID' and 'Component'
+    and convert the integer keys of component_dict to
+    the corresponding component names. The rest of the
+    structure remains unchanged.
+    """
+    # 1. Read the Excel file
+    df = pd.read_excel(excel_file_path)  # Make sure 'ID' and 'Component' columns exist
+
+    # 2. Build a lookup dict: {ID_value: Component_name}
+    id_to_name = dict(zip(df['ID'], df['Component']))
+
+    # 3. Create a new dictionary with keys = component names
+    component_dict_renamed = {}
+    for comp_id, comp_data in component_dict.items():
+        # Look up the name of the component in the id_to_name dictionary
+        comp_name = id_to_name.get(comp_id, f"Unknown_{comp_id}")
+        component_dict_renamed[comp_name] = comp_data
+
+    return component_dict_renamed
