@@ -1,11 +1,11 @@
 import sys
 import json
-from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QMessageBox, QTextEdit, QHBoxLayout, QScrollArea
+from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QMessageBox, QTextEdit
 from PyQt6.QtCore import Qt, QThread, pyqtSignal
-from PyQt6.QtGui import QPalette, QColor
 from main import genetic_algorithm, GENOME_LENGTH, POPULATION_SIZE, GENERATIONS, p_c_min, p_c_max, p_m_min, p_m_max
 from main import calculate_info
 from main import plot_replacement_times  # Import the function to display the graph
+import matplotlib.pyplot as plt
 
 
 class GeneticAlgorithmWorker(QThread):
@@ -34,33 +34,26 @@ class GeneticAlgorithmGUI(QWidget):
 
     def initUI(self):
         self.setWindowTitle("GUI")
-        self.setGeometry(100, 100, 600, 700)
-        self.setStyleSheet("background-color: #0f0f0f;")
+        self.setGeometry(100, 100, 400, 300)
 
         layout = QVBoxLayout()
 
-        # Input section
         self.cs_label = QLabel("C_s (Setup Cost):")
         self.cs_entry = QLineEdit()
-        self.cs_entry.setStyleSheet("background-color: #ffffff; color: black; padding: 5px;")
         layout.addWidget(self.cs_label)
         layout.addWidget(self.cs_entry)
 
         self.cd_label = QLabel("C_d (Downtime Cost Rate):")
         self.cd_entry = QLineEdit()
-        self.cd_entry.setStyleSheet("background-color: #ffffff; color: black; padding: 5px;")
         layout.addWidget(self.cd_label)
         layout.addWidget(self.cd_entry)
 
         self.m_label = QLabel("m (Number of Repairmen):")
         self.m_entry = QLineEdit()
-        self.m_entry.setStyleSheet("background-color: #ffffff; color: black; padding: 5px;")
         layout.addWidget(self.m_label)
         layout.addWidget(self.m_entry)
 
-        # Run button
         self.run_button = QPushButton("Run Algorithm")
-        self.run_button.setStyleSheet("background-color: #4CAF50; color: white; font-weight: bold; padding: 5px;")
         self.run_button.clicked.connect(self.run_genetic_algorithm)
         layout.addWidget(self.run_button)
 
@@ -68,30 +61,18 @@ class GeneticAlgorithmGUI(QWidget):
         layout.addWidget(self.loading_label)
 
         self.result_label = QLabel("", alignment=Qt.AlignmentFlag.AlignCenter)
-        self.result_label.setStyleSheet("color: #333; font-weight: bold;")
         layout.addWidget(self.result_label)
 
-        # Component buttons section
-        self.component_buttons_layout = QVBoxLayout()
-        self.scroll_area = QScrollArea()
-        self.scroll_widget = QWidget()
-        self.scroll_widget.setLayout(self.component_buttons_layout)
-        self.scroll_area.setWidgetResizable(True)
-        self.scroll_area.setWidget(self.scroll_widget)
-        self.scroll_area.setStyleSheet("background-color: #e0e0e0; padding: 5px;")
-        layout.addWidget(self.scroll_area)
+        self.maintenance_plan_box = QTextEdit()
+        self.maintenance_plan_box.setReadOnly(True)
+        self.maintenance_plan_box.setFixedHeight(500)
+        layout.addWidget(self.maintenance_plan_box)
 
-        # Details display
-        self.details_label = QLabel("", alignment=Qt.AlignmentFlag.AlignCenter)
-        self.details_label.setStyleSheet("background-color: #ffebcd; color: black; padding: 10px; border-radius: 5px;")
-        layout.addWidget(self.details_label)
-
-        # Graph button
         self.plot_button = QPushButton("Show Graph")
         self.plot_button.setEnabled(False)  # Disable until we get results
-        self.plot_button.setStyleSheet("background-color: #2196F3; color: white; font-weight: bold; padding: 5px;")
         self.plot_button.clicked.connect(self.show_graph)
         layout.addWidget(self.plot_button)
+
 
         self.setLayout(layout)
 
@@ -112,20 +93,11 @@ class GeneticAlgorithmGUI(QWidget):
     def display_result(self, best_individual, best_fitness, maintenance_plan):
         self.loading_label.setText("")
         self.result_label.setText(f"Cost Saving: {best_fitness}")
-        self.result_label.setStyleSheet("color: white; font-weight: bold; padding: 5px;")
+        formatted_info = json.dumps(maintenance_plan, indent=10, ensure_ascii=False)
+        self.maintenance_plan_box.setText(formatted_info)
 
-        for i in reversed(range(self.component_buttons_layout.count())):
-            self.component_buttons_layout.itemAt(i).widget().setParent(None)
-        
-        self.component_data = maintenance_plan  # Store component data for use
-        for component in maintenance_plan.keys():
-            button = QPushButton(component)
-            button.setStyleSheet("background-color: #ff5722; color: white; font-weight: bold; padding: 5px;")
-            button.clicked.connect(lambda checked, comp=component: self.show_component_details(comp))
-            self.component_buttons_layout.addWidget(button)
-
-        self.plot_button.setEnabled(True)  # Enable the button to display the graph
         self.maintenance_plan = maintenance_plan  # Store the variable
+        self.plot_button.setEnabled(True)  # Enable the button to display the graph
 
     def display_error(self, error_message):
         self.loading_label.setText("")
@@ -134,12 +106,6 @@ class GeneticAlgorithmGUI(QWidget):
     def show_graph(self):
         if hasattr(self, 'maintenance_plan'):
             plot_replacement_times(self.maintenance_plan)  # Call the function to display the graph
-
-    def show_component_details(self, component):
-        details = self.component_data.get(component, {})
-        duration = details.get("duration", [])
-        replacement_time = details.get("replacement_time", [])
-        self.details_label.setText(f"{component}\nDuration: {duration}\nReplacement Time: {replacement_time}")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
