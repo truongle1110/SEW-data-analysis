@@ -47,8 +47,8 @@ MUTATION_RATE = 0.01
 CROSSOVER_RATE = 0.7
 GENERATIONS = 1500
 
-C_s = 200
-C_d = 100
+C_s = 50
+C_d = 10
 
 m = 1                                                                   # Number of repairmen
 w_max = 7                                                               # Maximum number of iterations for binary search
@@ -286,7 +286,7 @@ def cost_benefit(B_S, B_U, P):
 # # Test main
 # genome = random_genome(GENOME_LENGTH)
 # genome = [13, 15, 17, 9, 8, 13, 15, 14, 12, 2, 6, 4, 5, 3, 14, 5, 12]    #1496.6997279200023
-genome = [11, 16, 13, 10, 15, 11, 8, 6, 4, 15, 9, 2, 17, 15, 6, 17, 1]
+genome = [15, 13, 10, 1, 17, 12, 10, 11, 3, 8, 14, 7, 3, 9, 5, 6, 11]
 N, G_activity = decode(genome)
 print(f"Genome: {genome}")
 print(f"Activities in each group: {G_activity}")
@@ -493,4 +493,4 @@ def calculate_info(genome):
 
 # plot_replacement_times(renamed_dict)
 
-mnn = calculate_info(genome)
+# mnn = calculate_info(genome)

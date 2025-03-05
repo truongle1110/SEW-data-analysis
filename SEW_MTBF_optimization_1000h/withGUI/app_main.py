@@ -4,6 +4,8 @@ from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButto
 from PyQt6.QtCore import Qt, QThread, pyqtSignal
 from main import genetic_algorithm, GENOME_LENGTH, POPULATION_SIZE, GENERATIONS, p_c_min, p_c_max, p_m_min, p_m_max
 from main import calculate_info
+from main import plot_replacement_times  # Import the function to display the graph
+import matplotlib.pyplot as plt
 
 
 class GeneticAlgorithmWorker(QThread):
@@ -62,12 +64,15 @@ class GeneticAlgorithmGUI(QWidget):
         layout.addWidget(self.result_label)
 
         self.maintenance_plan_box = QTextEdit()
-
         self.maintenance_plan_box.setReadOnly(True)
-
         self.maintenance_plan_box.setFixedHeight(500)
-
         layout.addWidget(self.maintenance_plan_box)
+
+        self.plot_button = QPushButton("Show Graph")
+        self.plot_button.setEnabled(False)  # Disable until we get results
+        self.plot_button.clicked.connect(self.show_graph)
+        layout.addWidget(self.plot_button)
+
 
         self.setLayout(layout)
 
@@ -87,13 +92,20 @@ class GeneticAlgorithmGUI(QWidget):
 
     def display_result(self, best_individual, best_fitness, maintenance_plan):
         self.loading_label.setText("")
-        self.result_label.setText(f"Best Individual: {best_individual}\nBest Fitness: {best_fitness}")
+        self.result_label.setText(f"Cost Saving: {best_fitness}")
         formatted_info = json.dumps(maintenance_plan, indent=10, ensure_ascii=False)
         self.maintenance_plan_box.setText(formatted_info)
+
+        self.maintenance_plan = maintenance_plan  # Store the variable
+        self.plot_button.setEnabled(True)  # Enable the button to display the graph
 
     def display_error(self, error_message):
         self.loading_label.setText("")
         QMessageBox.critical(self, "Error", error_message)
+
+    def show_graph(self):
+        if hasattr(self, 'maintenance_plan'):
+            plot_replacement_times(self.maintenance_plan)  # Call the function to display the graph
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
