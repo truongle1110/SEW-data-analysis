@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButto
 from PyQt6.QtCore import Qt, QThread, pyqtSignal
 from PyQt6.QtGui import QPalette, QColor
 from main import genetic_algorithm, GENOME_LENGTH, POPULATION_SIZE, GENERATIONS, p_c_min, p_c_max, p_m_min, p_m_max
-from main import calculate_info
+from main import calculate_info, t_begin, t_end
 from main import plot_replacement_times  # Import the function to display the graph
 
 
@@ -111,8 +111,9 @@ class GeneticAlgorithmGUI(QWidget):
 
     def display_result(self, best_individual, best_fitness, maintenance_plan):
         self.loading_label.setText("")
-        self.result_label.setText(f"Cost Saving: {best_fitness}")
+        self.result_label.setText(f"Maintenance Time Window: from {t_begin} to {t_end} (hours)\nCost Saving: {best_fitness}")
         self.result_label.setStyleSheet("color: white; font-weight: bold; padding: 5px;")
+
 
         for i in reversed(range(self.component_buttons_layout.count())):
             self.component_buttons_layout.itemAt(i).widget().setParent(None)

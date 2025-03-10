@@ -41,6 +41,8 @@ ID_activity = df2['ID activity']
 ID_component = df2['ID component']
 map_activity_to_IDcomponent = list(zip(ID_activity, ID_component))      # list of tuple (ID_component, ID_activity)   
 map_activity_to_replacement_time = list(zip(ID_activity, t))            # list of tuple (ID_component, ID_activity)
+t_begin = df2['Begin'][0]
+t_end = df2['End'][0]
 
 GENOME_LENGTH = 17                                                      # number of possible group
 POPULATION_SIZE = 60
@@ -221,7 +223,7 @@ def unavailability_cost_saving(G_activity, C_d, m, w_max):
     G_duration, G_total_duration = mapping_IDcomponent_to_duration(G_component)
     d_Gk = calculate_d_Gk(G_duration, m, w_max)
     B_U = (np.array(G_total_duration) - np.array(d_Gk)) * C_d
-    return B_U
+    return B_U, d_Gk
 
 # Define the piecewise function
 def P_i(t, t_i, alpha_i, beta_i):
@@ -391,8 +393,8 @@ def genetic_algorithm(genome_length, m, population_size, generations, p_c_min, p
 
     return best_solution, best_fitness_value
 
-# best_individual, best_fitness = genetic_algorithm(GENOME_LENGTH, m, POPULATION_SIZE, GENERATIONS, p_c_min, p_c_max, p_m_min, p_m_max, C_s, C_d)
-# print(f"The best individual is: {best_individual} with fitness: {best_fitness}")
+best_individual, best_fitness = genetic_algorithm(GENOME_LENGTH, m, POPULATION_SIZE, GENERATIONS, p_c_min, p_c_max, p_m_min, p_m_max, C_s, C_d)
+print(f"The best individual is: {best_individual} with fitness: {best_fitness}")
 
 # G_duration, G_component, replacement_time = mapping_to_UI(best_individual)
 # print(G_duration)

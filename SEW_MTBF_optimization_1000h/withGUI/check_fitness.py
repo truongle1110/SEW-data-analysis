@@ -40,6 +40,8 @@ ID_activity = df2['ID activity']
 ID_component = df2['ID component']
 map_activity_to_IDcomponent = list(zip(ID_activity, ID_component))      # list of tuple (ID_component, ID_activity)   
 map_activity_to_replacement_time = list(zip(ID_activity, t))            # list of tuple (ID_component, ID_activity)
+t_begin = df2['Begin'][0]
+t_end = df2['End'][0]
 
 GENOME_LENGTH = 17                                                      # number of possible group
 POPULATION_SIZE = 100
@@ -276,6 +278,7 @@ def penalty_cost(G_activity):
         # print("---------------------------------------------------")
         P.append(np.round(result.fun, decimals=3))
         t_group.append(np.round(result.x, decimals=3))
+    t_group = [float(arr[0]) for arr in t_group]
     return P, t_group
 
 # cost benefit EB = B_S + B_U - P
@@ -310,7 +313,7 @@ print(f"Beta in each group: {G_beta}")
 replacement_time = mapping_activity_to_replacement_time(map_activity_to_replacement_time, G_activity)
 print(f"Replacement time in each group: {replacement_time}")
 
-P, _ = penalty_cost(G_activity)
+P, t_group = penalty_cost(G_activity)
 print(f"Penalty cost: {P}")
 
 EB = cost_benefit(B_S, B_U, P)
@@ -494,3 +497,12 @@ def calculate_info(genome):
 # plot_replacement_times(renamed_dict)
 
 # mnn = calculate_info(genome)
+
+component_dict = build_component_dict(
+        G_duration, G_component, replacement_time
+    )
+print(component_dict)
+
+print(f"Optimal replacement time for each group: {t_group}")
+print(type(t_group))
+print(np.shape(t_group))
