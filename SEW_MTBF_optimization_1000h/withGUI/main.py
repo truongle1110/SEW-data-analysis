@@ -206,6 +206,7 @@ def calculate_d_Gk(G_duration, m, w_max):
     d_Gk = []
     for _, durations in G_duration:
         optimal_duration = multifit(durations, m, w_max)
+        optimal_duration = round(optimal_duration, 3)
         d_Gk.append(optimal_duration)
     return d_Gk
 
@@ -223,7 +224,7 @@ def unavailability_cost_saving(G_activity, C_d, m, w_max):
     G_duration, G_total_duration = mapping_IDcomponent_to_duration(G_component)
     d_Gk = calculate_d_Gk(G_duration, m, w_max)
     B_U = (np.array(G_total_duration) - np.array(d_Gk)) * C_d
-    return B_U, d_Gk
+    return B_U
 
 # Define the piecewise function
 def P_i(t, t_i, alpha_i, beta_i):
@@ -262,6 +263,7 @@ def penalty_cost(G_activity):
         result = minimize(wrapper_P_Gk, initial_guess, args=(t_i_list, alpha_i_list, beta_i_list))
         P.append(np.round(result.fun, decimals=3))
         t_group.append(np.round(result.x, decimals=3))
+    t_group = [float(arr[0]) for arr in t_group]
     return P, t_group
 
 # cost benefit EB = B_S + B_U + P
@@ -393,8 +395,8 @@ def genetic_algorithm(genome_length, m, population_size, generations, p_c_min, p
 
     return best_solution, best_fitness_value
 
-best_individual, best_fitness = genetic_algorithm(GENOME_LENGTH, m, POPULATION_SIZE, GENERATIONS, p_c_min, p_c_max, p_m_min, p_m_max, C_s, C_d)
-print(f"The best individual is: {best_individual} with fitness: {best_fitness}")
+# best_individual, best_fitness = genetic_algorithm(GENOME_LENGTH, m, POPULATION_SIZE, GENERATIONS, p_c_min, p_c_max, p_m_min, p_m_max, C_s, C_d)
+# print(f"The best individual is: {best_individual} with fitness: {best_fitness}")
 
 # G_duration, G_component, replacement_time = mapping_to_UI(best_individual)
 # print(G_duration)
@@ -439,7 +441,7 @@ def plot_replacement_times(component_dict):
         y_values = [comp_id] * len(replacements)
         
         # Scatter plot for this component
-        ax.scatter(replacements, y_values)
+        ax.scatter(replacements, y_values, color='blue', label = 'Estimated preventive maintenance')
     
     # Label axes
     ax.set_xlabel("Time")
@@ -450,7 +452,50 @@ def plot_replacement_times(component_dict):
     plt.yticks(sorted(component_dict.keys()))
     plt.grid(axis='y', linestyle='--', alpha=0.7)
     plt.title("Component Replacement Times")
+    # plt.legend(loc='upper right')
     plt.show()
+
+def plot_replacement_times_both_plans(individual_plan, estimate_plan):
+    """Plot replacement times from both plans on a single horizontal scatter plot,
+    using 'o' markers for the Individual Plan and 'x' markers for the Estimate Plan."""
+    
+    # We'll assume both plans have the same set of component names
+    components = list(individual_plan.keys())
+    
+    plt.figure()
+    
+    for i, comp in enumerate(components):
+        # Extract replacement times for both plans
+        times_indiv = individual_plan[comp]['replacement_time']
+        times_est = estimate_plan[comp]['replacement_time']
+        
+        # For the legend, we only set the label on the first component’s plots
+        if i == 0:
+            plt.scatter(times_indiv, [i]*len(times_indiv),
+                        marker='o', label='Individual Plan')
+            plt.scatter(times_est, [i]*len(times_est),
+                        marker='x', label='Estimate Plan')
+        else:
+            plt.scatter(times_indiv, [i]*len(times_indiv), marker='o')
+            plt.scatter(times_est, [i]*len(times_est), marker='x')
+    
+    # Label axes
+    plt.xlabel('Replacement Time')
+    plt.ylabel('Component')
+    
+    # Replace numeric y-ticks with component labels
+    plt.yticks(range(len(components)), components)
+    
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+    # Add a legend so we can distinguish the two plans
+    plt.legend()
+    
+    # Add a title (optional)
+    plt.title('Replacement Times: Individual vs. Estimate Plans')
+    
+    # Show the figure
+    plt.show()
+
 
 def rename_dict_keys_with_excel(component_dict, excel_file_path):
     """
@@ -475,6 +520,7 @@ def rename_dict_keys_with_excel(component_dict, excel_file_path):
     return component_dict_renamed
 
 def calculate_info(genome):
+    N, G_activity = decode(genome)
     G_duration, G_component, replacement_time = mapping_to_UI(genome)
     # print("G_duration: ", G_duration)
     # print("G_component: ", G_component)
@@ -483,4 +529,33 @@ def calculate_info(genome):
         G_duration, G_component, replacement_time
     )
     renamed_dict = rename_dict_keys_with_excel(component_dict, file_path_1)
-    return renamed_dict
+
+    d_Gk = calculate_d_Gk(G_duration, m, w_max)
+    _ , t_group = penalty_cost(G_activity)
+    estimate_duration = convert_right_form(G_component, d_Gk)
+    estimate_replacement_time = convert_right_form(G_component, t_group)
+    estimate_component_dict = build_component_dict(
+        estimate_duration, G_component, estimate_replacement_time
+    )
+    estimate_renamed_dict = rename_dict_keys_with_excel(estimate_component_dict, file_path_1)
+    return renamed_dict, estimate_renamed_dict
+
+def convert_right_form(components, durations):
+    """
+    Replaces the index list in each tuple in `components` with a list of the corresponding
+    duration repeated as many times as there were indices.
+    
+    Parameters:
+    - components (list[tuple[int, list[int]]]): 
+        Each element is a tuple of the form (component_id, list_of_indices).
+    - durations (list[float]): 
+        Durations for each component, where durations[component_id - 1] is the duration.
+        
+    Returns:
+    - list[tuple[int, list[float]]]: A new list of tuples with the second element replaced by 
+      a list of repeated durations.
+    """
+    return [
+        (comp_id, [durations[comp_id - 1]] * len(indices))
+        for comp_id, indices in components
+    ]

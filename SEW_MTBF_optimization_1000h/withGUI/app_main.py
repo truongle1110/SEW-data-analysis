@@ -6,10 +6,10 @@ from PyQt6.QtGui import QPalette, QColor
 from main import genetic_algorithm, GENOME_LENGTH, POPULATION_SIZE, GENERATIONS, p_c_min, p_c_max, p_m_min, p_m_max
 from main import calculate_info, t_begin, t_end
 from main import plot_replacement_times  # Import the function to display the graph
-
+from main import plot_replacement_times_both_plans
 
 class GeneticAlgorithmWorker(QThread):
-    result_signal = pyqtSignal(object, float, object)
+    result_signal = pyqtSignal(object, float, dict, dict)
     error_signal = pyqtSignal(str)
 
     def __init__(self, C_s, C_d, m):
@@ -21,9 +21,10 @@ class GeneticAlgorithmWorker(QThread):
     def run(self):
         try:
             best_individual, best_fitness = genetic_algorithm(GENOME_LENGTH, self.m, POPULATION_SIZE, GENERATIONS, p_c_min, p_c_max, p_m_min, p_m_max, self.C_s, self.C_d)
-            maintenance_plan = calculate_info(best_individual)
-            print(maintenance_plan)
-            self.result_signal.emit(best_individual, best_fitness, maintenance_plan)
+            individual_plan, estimate_plan = calculate_info(best_individual)
+            print("individual_plan: ", individual_plan)
+            print("estimate_plan: ", estimate_plan)
+            self.result_signal.emit(best_individual, best_fitness, individual_plan, estimate_plan)
         except Exception as e:
             self.error_signal.emit(str(e))
 
@@ -109,7 +110,7 @@ class GeneticAlgorithmGUI(QWidget):
         except ValueError:
             QMessageBox.critical(self, "Input Error", "Please enter valid numerical values for C_s, C_d, and m")
 
-    def display_result(self, best_individual, best_fitness, maintenance_plan):
+    def display_result(self, best_individual, best_fitness, individual_plan, estimate_plan):
         self.loading_label.setText("")
         self.result_label.setText(f"Maintenance Time Window: from {t_begin} to {t_end} (hours)\nCost Saving: {best_fitness}")
         self.result_label.setStyleSheet("color: white; font-weight: bold; padding: 5px;")
@@ -118,23 +119,24 @@ class GeneticAlgorithmGUI(QWidget):
         for i in reversed(range(self.component_buttons_layout.count())):
             self.component_buttons_layout.itemAt(i).widget().setParent(None)
         
-        self.component_data = maintenance_plan  # Store component data for use
-        for component in maintenance_plan.keys():
+        self.component_data = estimate_plan  # Store component data for use
+        for component in estimate_plan.keys():
             button = QPushButton(component)
             button.setStyleSheet("background-color: #ff5722; color: white; font-weight: bold; padding: 5px;")
             button.clicked.connect(lambda checked, comp=component: self.show_component_details(comp))
             self.component_buttons_layout.addWidget(button)
 
         self.plot_button.setEnabled(True)  # Enable the button to display the graph
-        self.maintenance_plan = maintenance_plan  # Store the variable
+        self.individual_plan = individual_plan
+        self.estimate_plan = estimate_plan  # Store the variable
 
     def display_error(self, error_message):
         self.loading_label.setText("")
         QMessageBox.critical(self, "Error", error_message)
 
     def show_graph(self):
-        if hasattr(self, 'maintenance_plan'):
-            plot_replacement_times(self.maintenance_plan)  # Call the function to display the graph
+        if hasattr(self, 'individual_plan') and hasattr(self, 'estimate_plan'):
+            plot_replacement_times_both_plans(self.individual_plan, self.estimate_plan)  # Call the function to display the graph
 
     def show_component_details(self, component):
         details = self.component_data.get(component, {})

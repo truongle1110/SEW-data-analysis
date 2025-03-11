@@ -212,6 +212,7 @@ def calculate_d_Gk(G_duration, m, w_max):
     d_Gk = []
     for _, durations in G_duration:
         optimal_duration = multifit(durations, m, w_max)
+        optimal_duration = round(optimal_duration, 3)
         d_Gk.append(optimal_duration)
     return d_Gk
 
@@ -479,11 +480,51 @@ def calculate_info(genome):
     print("G_duration: ", G_duration)
     print("G_component: ", G_component)
     print("replacement_time: ", replacement_time)
+
     component_dict = build_component_dict(
         G_duration, G_component, replacement_time
     )
+
     renamed_dict = rename_dict_keys_with_excel(component_dict, file_path_1)
-    return renamed_dict
+
+    d_Gk = calculate_d_Gk(G_duration, m, w_max)
+    print("d_Gk: ", d_Gk)
+    _ , t_group = penalty_cost(G_activity)
+    print("t_group: ", t_group)
+    estimate_duration = convert_right_form(G_component, d_Gk)
+    print("estimate_duration: ", estimate_duration)
+    estimate_replacement_time = convert_right_form(G_component, t_group)
+    print("estimate_replacement_time: ", estimate_replacement_time)
+
+    estimate_component_dict = build_component_dict(
+        estimate_duration, G_component, estimate_replacement_time
+    )
+    estimate_renamed_dict = rename_dict_keys_with_excel(estimate_component_dict, file_path_1)
+    print(renamed_dict)
+    print(estimate_renamed_dict)
+
+    return renamed_dict, estimate_renamed_dict
+
+
+def convert_right_form(components, durations):
+    """
+    Replaces the index list in each tuple in `components` with a list of the corresponding
+    duration repeated as many times as there were indices.
+    
+    Parameters:
+    - components (list[tuple[int, list[int]]]): 
+        Each element is a tuple of the form (component_id, list_of_indices).
+    - durations (list[float]): 
+        Durations for each component, where durations[component_id - 1] is the duration.
+        
+    Returns:
+    - list[tuple[int, list[float]]]: A new list of tuples with the second element replaced by 
+      a list of repeated durations.
+    """
+    return [
+        (comp_id, [durations[comp_id - 1]] * len(indices))
+        for comp_id, indices in components
+    ]
 
 # # Example: print the data for component 0
 # # print("Component 0:", component_dict[1])
@@ -496,13 +537,17 @@ def calculate_info(genome):
 
 # plot_replacement_times(renamed_dict)
 
-# mnn = calculate_info(genome)
+renamed_dict, estimate_renamed_dict = calculate_info(genome)
 
-component_dict = build_component_dict(
-        G_duration, G_component, replacement_time
-    )
-print(component_dict)
+# component_dict = build_component_dict(
+#         G_duration, G_component, replacement_time
+#     )
+# print(component_dict)
 
-print(f"Optimal replacement time for each group: {t_group}")
-print(type(t_group))
-print(np.shape(t_group))
+# print(f"Optimal replacement time for each group: {t_group}")
+# print("t_group:", t_group)
+# print(np.shape(t_group))
+
+# d_Gk = calculate_d_Gk(G_duration, m, w_max)
+# print(d_Gk)
+
